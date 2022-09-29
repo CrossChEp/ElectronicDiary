@@ -20,6 +20,11 @@ public class ClassEntity {
     @OneToMany(mappedBy = "userClass")
     private List<UserEntity> students;
 
+    @ManyToOne
+    @JoinColumn(name = "schoolid")
+    @Getter @Setter
+    private SchoolEntity school;
+
     public ClassEntity() {
     }
 }
