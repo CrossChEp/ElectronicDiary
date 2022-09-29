@@ -1,6 +1,7 @@
 package com.diary.diary.controller;
 
 import com.diary.diary.exception.UserAlreadyExistsException;
+import com.diary.diary.exception.UserNotFoundException;
 import com.diary.diary.model.user.UserAddModel;
 import com.diary.diary.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,10 @@ public class UserController {
 
     @GetMapping("/{userID}")
     public ResponseEntity<Object> getUser(@PathVariable long userID) {
-        return ResponseEntity.ok(userService.getUser(userID));
+        try {
+            return ResponseEntity.ok(userService.getUser(userID));
+        } catch (UserNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 }

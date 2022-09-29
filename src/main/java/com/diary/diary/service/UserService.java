@@ -37,7 +37,7 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserEntity user = userRepo.findByLogin(username);
         if(user == null) {
-            throw new UserNotFoundException("user with such login not found");
+            throw new UsernameNotFoundException("user with such login not found");
         }
         SimpleGrantedAuthority userRole = new SimpleGrantedAuthority(user.getRole().toString());
         return new User(user.getLogin(), user.getPassword(), List.of(userRole));
@@ -72,7 +72,7 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public UserGetModel getUser(long userID) {
+    public UserGetModel getUser(long userID) throws UserNotFoundException {
         UserEntity user = userRepo.findById(userID)
                 .orElseThrow(() -> new UserNotFoundException("no user with such id"));
         return convertUserToGetModel(user);
