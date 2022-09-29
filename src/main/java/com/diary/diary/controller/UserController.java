@@ -45,4 +45,13 @@ public class UserController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
+
+    @DeleteMapping
+    public ResponseEntity<Object> deleteUser() {
+        try {
+            return ResponseEntity.ok(userService.deleteUser());
+        } catch (UserNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
 }

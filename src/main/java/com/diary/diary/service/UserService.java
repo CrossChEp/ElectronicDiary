@@ -112,4 +112,10 @@ public class UserService implements UserDetailsService {
     private String hashPassword(String password) {
         return bCryptPasswordEncoder.encode(password);
     }
+
+    public UserEntity deleteUser() throws UserNotFoundException {
+        UserEntity user = getCurrentUser();
+        userRepo.delete(user);
+        return user;
+    }
 }
