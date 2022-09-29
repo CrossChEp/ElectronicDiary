@@ -23,7 +23,8 @@ CREATE TABLE timetables (
 
 CREATE TABLE classes (
     id BIGINT NOT NULL,
-    name VARCHAR(255) NOT NULL,
+    number INT NOT NULL ,
+    letter CHAR NOT NULL,
     timetableId BIGINT,
     CONSTRAINT timetable FOREIGN KEY (timetableId) REFERENCES timetables(id),
     primary key (id)

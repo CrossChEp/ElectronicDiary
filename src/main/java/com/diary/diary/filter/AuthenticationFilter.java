@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.*;
 import java.io.IOException;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
@@ -63,7 +64,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         JWTCreator.Builder jwtBuilder = JWT.create()
                 .withSubject(userDetails.getUsername());
         if(accessToken) {
-            jwtBuilder.withExpiresAt(new Date(new Date().getSeconds() + 30 * 60));
+            jwtBuilder.withExpiresAt(new Date().toInstant().plus(Duration.ofMinutes(30)));
         }
         return jwtBuilder.withClaim("role",userDetails.getAuthorities()
                 .stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
