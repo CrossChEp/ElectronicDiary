@@ -3,6 +3,7 @@ package com.diary.diary.controller;
 import com.diary.diary.exception.UserAlreadyExistsException;
 import com.diary.diary.exception.UserNotFoundException;
 import com.diary.diary.model.user.UserAddModel;
+import com.diary.diary.model.user.UserUpdateModel;
 import com.diary.diary.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,6 +32,16 @@ public class UserController {
         try {
             return ResponseEntity.ok(userService.getUser(userID));
         } catch (UserNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping
+    public ResponseEntity<Object> updateUser(@RequestBody UserUpdateModel newUserData) {
+        try {
+            return ResponseEntity.ok(userService.updateUser(newUserData));
+        }
+        catch (UserNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
