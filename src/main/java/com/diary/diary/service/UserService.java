@@ -2,15 +2,14 @@ package com.diary.diary.service;
 
 import com.diary.diary.config.RoleNames;
 import com.diary.diary.entity.RoleEntity;
-import com.diary.diary.exception.UserAlreadyExistsException;
+import com.diary.diary.exception.user.UserAlreadyExistsException;
 import com.diary.diary.model.user.UserGetModel;
 import com.diary.diary.model.user.UserUpdateModel;
 import com.diary.diary.repository.RoleRepository;
 import com.diary.diary.repository.UserRepository;
 import com.diary.diary.entity.UserEntity;
-import com.diary.diary.exception.UserNotFoundException;
+import com.diary.diary.exception.user.UserNotFoundException;
 import com.diary.diary.model.user.UserAddModel;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -22,7 +21,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service

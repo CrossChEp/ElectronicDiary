@@ -1,4 +1,4 @@
-package com.diary.diary.exception;
+package com.diary.diary.exception.user;
 
 public class UserNotFoundException extends Exception {
     public UserNotFoundException(String message) {

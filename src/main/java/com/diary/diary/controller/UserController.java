@@ -1,14 +1,13 @@
 package com.diary.diary.controller;
 
-import com.diary.diary.exception.UserAlreadyExistsException;
-import com.diary.diary.exception.UserNotFoundException;
+import com.diary.diary.exception.user.UserAlreadyExistsException;
+import com.diary.diary.exception.user.UserNotFoundException;
 import com.diary.diary.model.user.UserAddModel;
 import com.diary.diary.model.user.UserUpdateModel;
 import com.diary.diary.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
