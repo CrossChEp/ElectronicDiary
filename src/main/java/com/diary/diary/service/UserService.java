@@ -33,6 +33,7 @@ public class UserService implements UserDetailsService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder
             = new BCryptPasswordEncoder();
 
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserEntity user = userRepo.findByLogin(username);
@@ -40,7 +41,7 @@ public class UserService implements UserDetailsService {
             throw new UsernameNotFoundException("user with such login not found");
         }
         SimpleGrantedAuthority userRole = new SimpleGrantedAuthority(user.getRole().toString());
-        return new User(user.getLogin(), user.getPassword(), List.of(userRole));
+        return new User(Long.toString(user.getId()), user.getPassword(), List.of(userRole));
     }
 
     public UserEntity addUser(UserAddModel userData) throws UserAlreadyExistsException {
