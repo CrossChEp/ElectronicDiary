@@ -36,6 +36,11 @@ public class UserController {
         }
     }
 
+    @GetMapping
+    public ResponseEntity<Object> getUsers() {
+        return ResponseEntity.ok(userService.getUsers());
+    }
+
     @PutMapping
     public ResponseEntity<Object> updateUser(@RequestBody UserUpdateModel newUserData) {
         try {

@@ -22,6 +22,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -74,6 +75,15 @@ public class UserService implements UserDetailsService {
             role.setName(RoleNames.DEFAULT);
             roleRepo.save(role);
         }
+    }
+
+    public List<UserGetModel> getUsers() {
+        List<UserEntity> users = userRepo.findAll();
+        return convertToUserGetModelList(users);
+    }
+
+    private List<UserGetModel> convertToUserGetModelList(List<UserEntity> users) {
+        return users.stream().map(this::convertUserToGetModel).toList();
     }
 
     public UserGetModel getUser(long userID) throws UserNotFoundException {
