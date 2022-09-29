@@ -1,14 +1,13 @@
 package com.diary.diary.controller;
 
+import com.diary.diary.exception.UserAlreadyExistsException;
 import com.diary.diary.model.user.UserAddModel;
 import com.diary.diary.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/user")
@@ -19,7 +18,15 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<Object> register(@RequestBody UserAddModel userData) {
-        userService.addUser(userData);
-        return ResponseEntity.ok("ok");
+        try {
+            return ResponseEntity.ok(userService.addUser(userData));
+        } catch (UserAlreadyExistsException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        }
+    }
+
+    @GetMapping("/{userID}")
+    public ResponseEntity<Object> getUser(@PathVariable long userID) {
+        return ResponseEntity.ok(userService.getUser(userID));
     }
 }

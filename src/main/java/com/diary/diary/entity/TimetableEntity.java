@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "timetables")
+@Table(name = "timetables", schema = "working_schema")
 public class TimetableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

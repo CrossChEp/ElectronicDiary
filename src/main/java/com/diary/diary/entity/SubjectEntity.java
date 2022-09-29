@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "subjects")
+@Table(name = "subjects", schema = "working_schema")
 public class SubjectEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
