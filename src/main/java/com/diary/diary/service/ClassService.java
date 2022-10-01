@@ -21,7 +21,7 @@ public class ClassService {
 
     public ClassEntity addClass(ClassAddModel classData)
             throws ClassAlreadyExists, SchoolNotFoundException, InvalidModelDataException {
-        checkModelNullFields(classData);
+        checkModelValidation(classData);
         ClassEntity schoolClass = classRepo.findByNumberAndLetter(classData.getNumber(), classData.getLetter());
         if(schoolClass != null) {
             throw new ClassAlreadyExists("class with such data already exists");
@@ -32,7 +32,7 @@ public class ClassService {
         return schoolClass;
     }
 
-    private void checkModelNullFields(ClassAddModel model) throws InvalidModelDataException{
+    private void checkModelValidation(ClassAddModel model) throws InvalidModelDataException{
         if(model.getNumber() == null || model.getLetter() == null || model.getSchoolNumber() == null ||
                 (model.getNumber().longValue() <=  0L || model.getNumber().longValue() > 11L)) {
             throw new InvalidModelDataException("model is invalid");
