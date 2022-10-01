@@ -45,6 +45,10 @@ public class UserEntity {
     @Getter @Setter
     private ClassEntity userClass;
 
+    @ManyToOne
+    @JoinColumn(name = "schoolid")
+    @Getter @Setter
+    private SchoolEntity school;
 
 
     public UserEntity() {

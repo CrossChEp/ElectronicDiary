@@ -35,6 +35,10 @@ public class TimetableEntity {
     @Getter @Setter @ElementCollection
     private List<String> sunday;
 
+    @OneToOne(mappedBy = "timetable")
+    @Getter @Setter
+    private ClassEntity schoolClass;
+
     public TimetableEntity() {
     }
 }
