@@ -20,7 +20,7 @@ public class SchoolEntity {
 
     @OneToMany(mappedBy = "school")
     @Getter @Setter
-    private List<UserEntity> users;
+    private List<UserEntity> students;
 
     @OneToMany(mappedBy = "school")
     @Getter @Setter

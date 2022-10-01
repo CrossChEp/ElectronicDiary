@@ -22,6 +22,7 @@ public class ClassEntity {
     private char letter;
 
     @OneToMany(mappedBy = "userClass")
+    @Getter @Setter
     private List<UserEntity> students;
 
     @ManyToOne

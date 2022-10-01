@@ -13,7 +13,7 @@ public class SchoolGetModel {
     private long id;
 
     @Getter @Setter
-    private int name;
+    private int number;
 
     @Getter @Setter
     private List<UserGetModel> students;
@@ -22,6 +22,7 @@ public class SchoolGetModel {
         ModelMapper mapper = new ModelMapper();
         SchoolGetModel model = new SchoolGetModel();
         mapper.map(school, model);
+
         return model;
     }
 }

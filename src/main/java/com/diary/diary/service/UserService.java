@@ -80,7 +80,7 @@ public class UserService implements UserDetailsService {
         return convertToUserGetModelList(users);
     }
 
-    private List<UserGetModel> convertToUserGetModelList(List<UserEntity> users) {
+    public List<UserGetModel> convertToUserGetModelList(List<UserEntity> users) {
         return users.stream().map(this::convertUserToGetModel).toList();
     }
 
