@@ -1,5 +1,6 @@
 package com.diary.diary.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,6 +16,9 @@ public class ClassEntity {
     private long id;
 
     @Getter @Setter
+    private int number;
+
+    @Getter @Setter
     private char letter;
 
     @OneToMany(mappedBy = "userClass")
@@ -24,6 +28,12 @@ public class ClassEntity {
     @JoinColumn(name = "schoolid")
     @Getter @Setter
     private SchoolEntity school;
+
+    @OneToOne
+    @JoinColumn(name = "timetableid")
+    @JsonIgnore @Getter
+    @Setter
+    private TimetableEntity timetable;
 
     public ClassEntity() {
     }
