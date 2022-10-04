@@ -1,6 +1,7 @@
 package com.diary.diary.controller.admin;
 
 import com.diary.diary.exception.school.SchoolAlreadyExistsException;
+import com.diary.diary.exception.school.SchoolNotFoundException;
 import com.diary.diary.exception.user.UserNotFoundException;
 import com.diary.diary.model.admin.AdminAddUserToSchoolModel;
 import com.diary.diary.model.school.SchoolAddModel;
@@ -34,6 +35,15 @@ public class AdminSchoolController {
         try {
             return ResponseEntity.ok(schoolService.addSchool(schoolData));
         } catch (SchoolAlreadyExistsException | UserNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @DeleteMapping("/{schoolId}")
+    public ResponseEntity<Object> deleteSchool(@PathVariable long schoolId) {
+        try {
+            return ResponseEntity.ok(schoolService.deleteSchool(schoolId));
+        } catch (SchoolNotFoundException | UserNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }

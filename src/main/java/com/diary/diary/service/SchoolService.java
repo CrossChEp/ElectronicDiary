@@ -58,6 +58,14 @@ public class SchoolService {
         return schools.stream().map(SchoolGetModel::toModel).toList();
     }
 
+    public SchoolEntity deleteSchool(long id)
+            throws SchoolNotFoundException, UserNotFoundException {
+        userService.checkUserRoleOrThrow(RoleNames.ADMIN, userService.getCurrentUser());
+        SchoolEntity school =  getSchoolEntity(id);
+        schoolRepo.delete(school);
+        return school;
+    }
+
     public SchoolEntity getSchoolEntity(long schoolId) throws SchoolNotFoundException {
         return schoolRepo.findById(schoolId)
                 .orElseThrow(() -> new SchoolNotFoundException("school with id " + schoolId + " not found"));
