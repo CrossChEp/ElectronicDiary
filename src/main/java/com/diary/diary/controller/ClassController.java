@@ -1,7 +1,5 @@
 package com.diary.diary.controller;
 
-import com.diary.diary.exception.school.SchoolNotFoundException;
-import com.diary.diary.model.school_class.ClassAddModel;
 import com.diary.diary.model.school_class.ClassGetByIdModel;
 import com.diary.diary.model.school_class.ClassGetByNumberModel;
 import com.diary.diary.service.ClassService;
@@ -16,15 +14,6 @@ public class ClassController {
 
     @Autowired
     private ClassService classService;
-
-    @PostMapping
-    public ResponseEntity<Object> addClass(@RequestBody ClassAddModel classData) {
-        try {
-            return ResponseEntity.ok(classService.addClass(classData));
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
-        }
-    }
 
     @GetMapping
     public ResponseEntity<Object> getClasses() {
