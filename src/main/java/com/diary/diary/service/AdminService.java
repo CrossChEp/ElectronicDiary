@@ -4,6 +4,7 @@ import com.diary.diary.config.RoleNames;
 import com.diary.diary.entity.SchoolEntity;
 import com.diary.diary.entity.UserEntity;
 import com.diary.diary.exception.school.SchoolNotFoundException;
+import com.diary.diary.exception.user.UserAlreadyExistsException;
 import com.diary.diary.exception.user.UserNotFoundException;
 import com.diary.diary.model.admin.AdminAddUserToSchoolModel;
 import com.diary.diary.repository.SchoolRepository;
@@ -29,11 +30,13 @@ public class AdminService {
     private SchoolService schoolService;
 
     public UserEntity addUserToSchool(AdminAddUserToSchoolModel addUserToSchoolData)
-            throws UserNotFoundException, SchoolNotFoundException {
+            throws UserNotFoundException, SchoolNotFoundException, UserAlreadyExistsException {
         userService.checkUserRoleOrThrow(RoleNames.ADMIN, userService.getCurrentUser());
         UserEntity user = userService.getUserEntity(addUserToSchoolData.getUserId());
         SchoolEntity school = schoolService.getSchoolEntityByNumber(addUserToSchoolData.getSchoolNumber());
-//        user.setSchool(school);
+        if(school.getStudents().contains(user)) {
+            throw new UserAlreadyExistsException("user already in this school");
+        }
         school.getStudents().add(user);
         schoolRepo.save(school);
         userRepo.save(user);
