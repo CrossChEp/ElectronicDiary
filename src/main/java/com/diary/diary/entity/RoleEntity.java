@@ -17,7 +17,7 @@ public class RoleEntity {
     @Getter @Setter
     private String name;
 
-    @OneToMany(mappedBy = "role")
+    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
     private List<UserEntity> users;
 
     public RoleEntity() {

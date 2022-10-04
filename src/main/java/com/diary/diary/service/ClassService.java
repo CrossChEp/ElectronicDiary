@@ -7,6 +7,7 @@ import com.diary.diary.exception.school.SchoolNotFoundException;
 import com.diary.diary.exception.school_class.ClassAlreadyExists;
 import com.diary.diary.exception.school_class.ClassNotFoundException;
 import com.diary.diary.model.school_class.ClassAddModel;
+import com.diary.diary.model.school_class.ClassGetByIdModel;
 import com.diary.diary.model.school_class.ClassGetByNumberModel;
 import com.diary.diary.model.school_class.ClassGetModel;
 import com.diary.diary.repository.ClassRepository;
@@ -84,6 +85,27 @@ public class ClassService {
         for(var schoolClass: school.getClasses()) {
             if(schoolClass.getNumber() == classData.getNumber()
                     && schoolClass.getLetter() == classData.getLetter()) {
+                return schoolClass;
+            }
+        }
+        return null;
+    }
+
+    public ClassGetModel getClassBySchoolId(ClassGetByIdModel classData)
+            throws SchoolNotFoundException, ClassNotFoundException {
+        SchoolEntity school = schoolRepo.findById(classData.getSchoolId())
+                .orElseThrow(() -> new SchoolNotFoundException("school with such id doesn't exists"));
+        ClassEntity schoolClass = findClassInSchoolById(classData, school);
+        if(schoolClass == null) {
+            throw new ClassNotFoundException("class with such id doesn't exists");
+        }
+        return ClassGetModel.toModel(schoolClass);
+    }
+
+    private ClassEntity findClassInSchoolById(ClassGetByIdModel classData, SchoolEntity school) {
+        for(var schoolClass: school.getClasses()) {
+            if(schoolClass.getNumber() == classData.getNumber()
+                && schoolClass.getLetter() == classData.getLetter()) {
                 return schoolClass;
             }
         }

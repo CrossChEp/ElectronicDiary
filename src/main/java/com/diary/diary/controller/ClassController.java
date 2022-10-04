@@ -2,6 +2,7 @@ package com.diary.diary.controller;
 
 import com.diary.diary.exception.school.SchoolNotFoundException;
 import com.diary.diary.model.school_class.ClassAddModel;
+import com.diary.diary.model.school_class.ClassGetByIdModel;
 import com.diary.diary.model.school_class.ClassGetByNumberModel;
 import com.diary.diary.service.ClassService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,18 @@ public class ClassController {
             return ResponseEntity.ok(classService.getSchoolClass(classGetByNumberModel));
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("{schoolNumberId}/{classNumber}/{classLetter}")
+    public ResponseEntity<Object> getSchoolClassById(@PathVariable long schoolNumberId,
+                                                     @PathVariable int classNumber,
+                                                     @PathVariable char classLetter) {
+        try {
+            ClassGetByIdModel classData = new ClassGetByIdModel(schoolNumberId, classNumber, classLetter);
+            return ResponseEntity.ok(classService.getClassBySchoolId(classData));
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
         }
     }
 }

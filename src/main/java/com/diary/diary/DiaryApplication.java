@@ -1,5 +1,9 @@
 package com.diary.diary;
 
+import com.diary.diary.config.RoleNames;
+import com.diary.diary.repository.RoleRepository;
+import com.diary.diary.service.RoleService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;

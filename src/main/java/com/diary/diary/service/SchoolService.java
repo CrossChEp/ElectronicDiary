@@ -51,4 +51,17 @@ public class SchoolService {
     public List<SchoolGetModel> generateGetModelList(List<SchoolEntity> schools) {
         return schools.stream().map(SchoolGetModel::toModel).toList();
     }
+
+    public SchoolEntity getSchoolEntity(long schoolId) throws SchoolNotFoundException {
+        return schoolRepo.findById(schoolId)
+                .orElseThrow(() -> new SchoolNotFoundException("school with id " + schoolId + " not found"));
+    }
+
+    public SchoolEntity getSchoolEntityByNumber(int schoolNumber) throws SchoolNotFoundException {
+        SchoolEntity school =  schoolRepo.findByNumber(schoolNumber);
+        if(school == null) {
+            throw new SchoolNotFoundException("school with number " + schoolNumber + " not found");
+        }
+        return school;
+    }
 }
