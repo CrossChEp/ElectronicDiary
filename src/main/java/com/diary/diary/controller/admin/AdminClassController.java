@@ -8,7 +8,6 @@ import com.diary.diary.model.admin.AdminRemoveUserFromClassModel;
 import com.diary.diary.model.school_class.ClassAddModel;
 import com.diary.diary.service.AdminService;
 import com.diary.diary.service.ClassService;
-import com.diary.diary.service.SchoolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,7 +55,7 @@ public class AdminClassController {
     @DeleteMapping("/user")
     public ResponseEntity<Object> removeUserFromSchool(@RequestBody AdminRemoveUserFromClassModel userClasModel) {
         try {
-            return ResponseEntity.ok(adminService.removeUserFromSchool(userClasModel));
+            return ResponseEntity.ok(adminService.removeUserFromClass(userClasModel));
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }

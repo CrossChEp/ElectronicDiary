@@ -11,15 +11,12 @@ import com.diary.diary.exception.user.UserNotFoundException;
 import com.diary.diary.model.admin.AdminAddUserToClassModel;
 import com.diary.diary.model.admin.AdminAddUserToSchoolModel;
 import com.diary.diary.model.admin.AdminRemoveUserFromClassModel;
+import com.diary.diary.model.admin.AdminRemoveUserFromSchoolModel;
 import com.diary.diary.repository.ClassRepository;
 import com.diary.diary.repository.SchoolRepository;
 import com.diary.diary.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class AdminService {
@@ -79,7 +76,7 @@ public class AdminService {
         return user.getSchool().getClasses().contains(schoolClass);
     }
 
-    public UserEntity removeUserFromSchool(AdminRemoveUserFromClassModel userClassModel)
+    public UserEntity removeUserFromClass(AdminRemoveUserFromClassModel userClassModel)
             throws UserNotFoundException {
         userService.checkUserRoleOrThrow(RoleNames.ADMIN, userService.getCurrentUser());
         UserEntity student = userService.getUserEntity(userClassModel.getUserId());
@@ -87,6 +84,18 @@ public class AdminService {
             throw new UserNotFoundException("there is no such user in class");
         }
         student.setUserClass(null);
+        userRepo.save(student);
+        return student;
+    }
+
+    public UserEntity removeUserFromSchool(AdminRemoveUserFromSchoolModel userSchoolModel)
+            throws UserNotFoundException {
+        userService.checkUserRoleOrThrow(RoleNames.ADMIN, userService.getCurrentUser());
+        UserEntity student = userService.getUserEntity(userSchoolModel.getUserId());
+        if(student.getSchool() == null) {
+            throw new UserNotFoundException("there is no such user in school");
+        }
+        student.setSchool(null);
         userRepo.save(student);
         return student;
     }
