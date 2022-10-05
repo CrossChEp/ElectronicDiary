@@ -10,6 +10,7 @@ import com.diary.diary.exception.user.UserAlreadyExistsException;
 import com.diary.diary.exception.user.UserNotFoundException;
 import com.diary.diary.model.admin.AdminAddUserToClassModel;
 import com.diary.diary.model.admin.AdminAddUserToSchoolModel;
+import com.diary.diary.model.admin.AdminRemoveUserFromClassModel;
 import com.diary.diary.repository.ClassRepository;
 import com.diary.diary.repository.SchoolRepository;
 import com.diary.diary.repository.UserRepository;
@@ -76,5 +77,17 @@ public class AdminService {
             return false;
         }
         return user.getSchool().getClasses().contains(schoolClass);
+    }
+
+    public UserEntity removeUserFromSchool(AdminRemoveUserFromClassModel userClassModel)
+            throws UserNotFoundException {
+        userService.checkUserRoleOrThrow(RoleNames.ADMIN, userService.getCurrentUser());
+        UserEntity student = userService.getUserEntity(userClassModel.getUserId());
+        if(student.getUserClass() == null) {
+            throw new UserNotFoundException("there is no such user in class");
+        }
+        student.setUserClass(null);
+        userRepo.save(student);
+        return student;
     }
 }
