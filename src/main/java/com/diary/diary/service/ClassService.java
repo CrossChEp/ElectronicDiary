@@ -1,11 +1,13 @@
 package com.diary.diary.service;
 
+import com.diary.diary.config.RoleNames;
 import com.diary.diary.entity.ClassEntity;
 import com.diary.diary.entity.SchoolEntity;
 import com.diary.diary.exception.model.InvalidModelDataException;
 import com.diary.diary.exception.school.SchoolNotFoundException;
 import com.diary.diary.exception.school_class.ClassAlreadyExists;
 import com.diary.diary.exception.school_class.ClassNotFoundException;
+import com.diary.diary.exception.user.UserNotFoundException;
 import com.diary.diary.model.school_class.ClassAddModel;
 import com.diary.diary.model.school_class.ClassGetByIdModel;
 import com.diary.diary.model.school_class.ClassGetByNumberModel;
@@ -25,6 +27,9 @@ public class ClassService {
     private ClassRepository classRepo;
     @Autowired
     private SchoolRepository schoolRepo;
+
+    @Autowired
+    private UserService userService;
 
     public ClassEntity getClassEntity(long classId) throws ClassNotFoundException {
         return classRepo.findById(classId)
@@ -120,5 +125,12 @@ public class ClassService {
 
     private List<ClassGetModel> createModelList(List<ClassEntity> classes) {
         return classes.stream().map(ClassGetModel::toModel).toList();
+    }
+
+    public ClassEntity deleteClass(long id) throws ClassNotFoundException, UserNotFoundException {
+        userService.checkUserRoleOrThrow(RoleNames.ADMIN, userService.getCurrentUser());
+        ClassEntity schoolClass = getClassEntity(id);
+        classRepo.delete(schoolClass);
+        return schoolClass;
     }
 }
