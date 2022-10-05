@@ -58,6 +58,9 @@ public class AdminService {
         userService.checkUserRoleOrThrow(RoleNames.ADMIN, userService.getCurrentUser());
         UserEntity user = userService.getUserEntity(userAndClassModel.getUserId());
         ClassEntity schoolClass = classService.getClassEntity(userAndClassModel.getClassId());
+        if(!isUserCanBeAddedToThisClass(schoolClass, user)) {
+            throw new UserNotFoundException("user has no available school to be added to this class");
+        }
         if(schoolClass.getStudents().contains(user)) {
             throw new UserAlreadyExistsException("user already in this class");
         }
@@ -66,4 +69,12 @@ public class AdminService {
         userRepo.save(user);
         return schoolClass;
     }
+
+    private boolean isUserCanBeAddedToThisClass(ClassEntity schoolClass, UserEntity user) {
+        if(user.getUserClass() != null || user.getSchool() == null) {
+            return false;
+        }
+        return user.getSchool().getClasses().contains(schoolClass);
+    }
+
 }
