@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ClassService {
@@ -24,6 +25,11 @@ public class ClassService {
     private ClassRepository classRepo;
     @Autowired
     private SchoolRepository schoolRepo;
+
+    public ClassEntity getClassEntity(long classId) throws ClassNotFoundException {
+        return classRepo.findById(classId)
+                .orElseThrow(() -> new ClassNotFoundException("class with such id doesn't exists"));
+    }
 
     public ClassEntity addClass(ClassAddModel classData)
             throws ClassAlreadyExists, SchoolNotFoundException, InvalidModelDataException {

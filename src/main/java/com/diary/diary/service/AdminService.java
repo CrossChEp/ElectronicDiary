@@ -1,12 +1,16 @@
 package com.diary.diary.service;
 
 import com.diary.diary.config.RoleNames;
+import com.diary.diary.entity.ClassEntity;
 import com.diary.diary.entity.SchoolEntity;
 import com.diary.diary.entity.UserEntity;
 import com.diary.diary.exception.school.SchoolNotFoundException;
+import com.diary.diary.exception.school_class.ClassNotFoundException;
 import com.diary.diary.exception.user.UserAlreadyExistsException;
 import com.diary.diary.exception.user.UserNotFoundException;
+import com.diary.diary.model.admin.AdminAddUserToClassModel;
 import com.diary.diary.model.admin.AdminAddUserToSchoolModel;
+import com.diary.diary.repository.ClassRepository;
 import com.diary.diary.repository.SchoolRepository;
 import com.diary.diary.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +33,11 @@ public class AdminService {
     @Autowired
     private SchoolService schoolService;
 
+    @Autowired
+    private ClassService classService;
+    @Autowired
+    private ClassRepository classRepo;
+
     public UserEntity addUserToSchool(AdminAddUserToSchoolModel addUserToSchoolData)
             throws UserNotFoundException, SchoolNotFoundException, UserAlreadyExistsException {
         userService.checkUserRoleOrThrow(RoleNames.ADMIN, userService.getCurrentUser());
@@ -37,9 +46,24 @@ public class AdminService {
         if(school.getStudents().contains(user)) {
             throw new UserAlreadyExistsException("user already in this school");
         }
-        school.getStudents().add(user);
+        user.setSchool(school);
         schoolRepo.save(school);
         userRepo.save(user);
         return user;
+    }
+
+
+    public ClassEntity addUserToClass(AdminAddUserToClassModel userAndClassModel)
+            throws UserNotFoundException, ClassNotFoundException, UserAlreadyExistsException {
+        userService.checkUserRoleOrThrow(RoleNames.ADMIN, userService.getCurrentUser());
+        UserEntity user = userService.getUserEntity(userAndClassModel.getUserId());
+        ClassEntity schoolClass = classService.getClassEntity(userAndClassModel.getClassId());
+        if(schoolClass.getStudents().contains(user)) {
+            throw new UserAlreadyExistsException("user already in this class");
+        }
+        user.setUserClass(schoolClass);
+        classRepo.save(schoolClass);
+        userRepo.save(user);
+        return schoolClass;
     }
 }

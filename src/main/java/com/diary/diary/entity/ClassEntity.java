@@ -21,8 +21,9 @@ public class ClassEntity {
     @Getter @Setter
     private char letter;
 
-    @OneToMany(mappedBy = "userClass")
+    @OneToMany(mappedBy = "userClass", cascade = CascadeType.ALL)
     @Getter @Setter
+    @JsonIgnore
     private List<UserEntity> students;
 
     @ManyToOne
