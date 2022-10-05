@@ -16,15 +16,6 @@ public class SchoolController {
     @Autowired
     private SchoolService schoolService;
 
-    @PostMapping
-    public ResponseEntity<Object> addSchool(@RequestBody SchoolAddModel schoolData) {
-        try {
-            return ResponseEntity.ok(schoolService.addSchool(schoolData));
-        } catch (SchoolAlreadyExistsException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
-    }
-
     @GetMapping("/{schoolId}")
     public ResponseEntity<Object> getSchoolById(@PathVariable long schoolId) {
         try {

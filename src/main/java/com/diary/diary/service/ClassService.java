@@ -1,12 +1,15 @@
 package com.diary.diary.service;
 
+import com.diary.diary.config.RoleNames;
 import com.diary.diary.entity.ClassEntity;
 import com.diary.diary.entity.SchoolEntity;
 import com.diary.diary.exception.model.InvalidModelDataException;
 import com.diary.diary.exception.school.SchoolNotFoundException;
 import com.diary.diary.exception.school_class.ClassAlreadyExists;
 import com.diary.diary.exception.school_class.ClassNotFoundException;
+import com.diary.diary.exception.user.UserNotFoundException;
 import com.diary.diary.model.school_class.ClassAddModel;
+import com.diary.diary.model.school_class.ClassGetByIdModel;
 import com.diary.diary.model.school_class.ClassGetByNumberModel;
 import com.diary.diary.model.school_class.ClassGetModel;
 import com.diary.diary.repository.ClassRepository;
@@ -16,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ClassService {
@@ -23,6 +27,14 @@ public class ClassService {
     private ClassRepository classRepo;
     @Autowired
     private SchoolRepository schoolRepo;
+
+    @Autowired
+    private UserService userService;
+
+    public ClassEntity getClassEntity(long classId) throws ClassNotFoundException {
+        return classRepo.findById(classId)
+                .orElseThrow(() -> new ClassNotFoundException("class with such id doesn't exists"));
+    }
 
     public ClassEntity addClass(ClassAddModel classData)
             throws ClassAlreadyExists, SchoolNotFoundException, InvalidModelDataException {
@@ -90,7 +102,35 @@ public class ClassService {
         return null;
     }
 
+    public ClassGetModel getClassBySchoolId(ClassGetByIdModel classData)
+            throws SchoolNotFoundException, ClassNotFoundException {
+        SchoolEntity school = schoolRepo.findById(classData.getSchoolId())
+                .orElseThrow(() -> new SchoolNotFoundException("school with such id doesn't exists"));
+        ClassEntity schoolClass = findClassInSchoolById(classData, school);
+        if(schoolClass == null) {
+            throw new ClassNotFoundException("class with such id doesn't exists");
+        }
+        return ClassGetModel.toModel(schoolClass);
+    }
+
+    private ClassEntity findClassInSchoolById(ClassGetByIdModel classData, SchoolEntity school) {
+        for(var schoolClass: school.getClasses()) {
+            if(schoolClass.getNumber() == classData.getNumber()
+                && schoolClass.getLetter() == classData.getLetter()) {
+                return schoolClass;
+            }
+        }
+        return null;
+    }
+
     private List<ClassGetModel> createModelList(List<ClassEntity> classes) {
         return classes.stream().map(ClassGetModel::toModel).toList();
+    }
+
+    public ClassEntity deleteClass(long id) throws ClassNotFoundException, UserNotFoundException {
+        userService.checkUserRoleOrThrow(RoleNames.ADMIN, userService.getCurrentUser());
+        ClassEntity schoolClass = getClassEntity(id);
+        classRepo.delete(schoolClass);
+        return schoolClass;
     }
 }

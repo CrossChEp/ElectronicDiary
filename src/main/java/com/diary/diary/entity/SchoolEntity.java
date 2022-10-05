@@ -18,11 +18,12 @@ public class SchoolEntity {
     @Getter @Setter
     private long number;
 
-    @OneToMany(mappedBy = "school")
+    @OneToMany(mappedBy = "school", cascade = CascadeType.ALL)
     @Getter @Setter
+    @JsonIgnore
     private List<UserEntity> students;
 
-    @OneToMany(mappedBy = "school")
+    @OneToMany(mappedBy = "school", cascade = CascadeType.ALL)
     @Getter @Setter
     @JsonIgnore
     private List<ClassEntity> classes;

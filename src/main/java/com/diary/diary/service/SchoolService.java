@@ -1,9 +1,11 @@
 package com.diary.diary.service;
 
+import com.diary.diary.config.RoleNames;
 import com.diary.diary.entity.SchoolEntity;
 import com.diary.diary.entity.UserEntity;
 import com.diary.diary.exception.school.SchoolAlreadyExistsException;
 import com.diary.diary.exception.school.SchoolNotFoundException;
+import com.diary.diary.exception.user.UserNotFoundException;
 import com.diary.diary.model.school.SchoolAddModel;
 import com.diary.diary.model.school.SchoolGetModel;
 import com.diary.diary.repository.SchoolRepository;
@@ -17,8 +19,12 @@ import java.util.List;
 public class SchoolService {
     @Autowired
     private SchoolRepository schoolRepo;
+    @Autowired
+    private UserService userService;
 
-    public SchoolEntity addSchool(SchoolAddModel schoolData) throws SchoolAlreadyExistsException {
+    public SchoolEntity addSchool(SchoolAddModel schoolData)
+            throws SchoolAlreadyExistsException, UserNotFoundException {
+        userService.checkUserRoleOrThrow(RoleNames.ADMIN, userService.getCurrentUser());
         SchoolEntity school = schoolRepo.findByNumber(schoolData.getNumber());
         if(school != null) {
             throw new SchoolAlreadyExistsException("school with such a number already exists");
@@ -50,5 +56,26 @@ public class SchoolService {
 
     public List<SchoolGetModel> generateGetModelList(List<SchoolEntity> schools) {
         return schools.stream().map(SchoolGetModel::toModel).toList();
+    }
+
+    public SchoolEntity deleteSchool(long id)
+            throws SchoolNotFoundException, UserNotFoundException {
+        userService.checkUserRoleOrThrow(RoleNames.ADMIN, userService.getCurrentUser());
+        SchoolEntity school =  getSchoolEntity(id);
+        schoolRepo.delete(school);
+        return school;
+    }
+
+    public SchoolEntity getSchoolEntity(long schoolId) throws SchoolNotFoundException {
+        return schoolRepo.findById(schoolId)
+                .orElseThrow(() -> new SchoolNotFoundException("school with id " + schoolId + " not found"));
+    }
+
+    public SchoolEntity getSchoolEntityByNumber(int schoolNumber) throws SchoolNotFoundException {
+        SchoolEntity school =  schoolRepo.findByNumber(schoolNumber);
+        if(school == null) {
+            throw new SchoolNotFoundException("school with number " + schoolNumber + " not found");
+        }
+        return school;
     }
 }

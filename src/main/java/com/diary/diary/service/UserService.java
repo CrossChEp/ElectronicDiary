@@ -3,6 +3,7 @@ package com.diary.diary.service;
 import com.diary.diary.config.RoleNames;
 import com.diary.diary.entity.RoleEntity;
 import com.diary.diary.exception.user.UserAlreadyExistsException;
+import com.diary.diary.exception.user.UserHasNoSuchRole;
 import com.diary.diary.model.user.UserGetModel;
 import com.diary.diary.model.user.UserUpdateModel;
 import com.diary.diary.repository.RoleRepository;
@@ -125,5 +126,16 @@ public class UserService implements UserDetailsService {
         UserEntity user = getCurrentUser();
         userRepo.delete(user);
         return user;
+    }
+
+    public void checkUserRoleOrThrow(String userRole, UserEntity user)  {
+        if (!user.getRole().getName().equals(userRole)) {
+            throw new UserHasNoSuchRole("user with role " + userRole + " doesn't exists");
+        }
+    }
+
+    public UserEntity getUserEntity(long userId) throws UserNotFoundException {
+        return userRepo.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("user with id " + userId + " not found"));
     }
 }
