@@ -18,25 +18,24 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/admin/subject")
 public class AdminSubjectController {
     @Autowired
-    private SubjectService subjectService;
-
-    @Autowired
     private AdminSubjectService adminSubjectService;
 
     @PostMapping
     public ResponseEntity<Object> addSubject(@RequestBody SubjectAddModel subjectData) {
         try {
-            return ResponseEntity.ok(subjectService.addSubject(subjectData));
+            return ResponseEntity.ok(adminSubjectService.addSubject(subjectData));
         } catch(SubjectAlreadyExistsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (UserNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
     @PutMapping
     public ResponseEntity<Object> updateSubject(@RequestBody SubjectUpdateModel subjectNewData) {
         try {
-            return ResponseEntity.ok(subjectService.updateSubject(subjectNewData));
-        } catch (SubjectNotFoundException e) {
+            return ResponseEntity.ok(adminSubjectService.updateSubject(subjectNewData));
+        } catch (UserNotFoundException | SubjectNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
