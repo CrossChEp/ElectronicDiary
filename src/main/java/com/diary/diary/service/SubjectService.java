@@ -4,9 +4,13 @@ import com.diary.diary.entity.SubjectEntity;
 import com.diary.diary.exception.subject.SubjectAlreadyExistsException;
 import com.diary.diary.exception.subject.SubjectNotFoundException;
 import com.diary.diary.model.subject.SubjectAddModel;
+import com.diary.diary.model.subject.SubjectGetModel;
 import com.diary.diary.repository.SubjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SubjectService {
@@ -26,5 +30,26 @@ public class SubjectService {
         subject.setName(subjectData.getName());
         subjectRepo.save(subject);
         return subject;
+    }
+
+    public List<SubjectGetModel> getSubjects() {
+        List<SubjectEntity> subjects = subjectRepo.findAll();
+        return generateSubjectGetModelList(subjects);
+    }
+
+    private List<SubjectGetModel> generateSubjectGetModelList(List<SubjectEntity> subjects) {
+        return subjects.stream().map(SubjectGetModel::toModel).toList();
+    }
+
+    public SubjectGetModel getSubject(long id) throws SubjectNotFoundException {
+        SubjectEntity subject =  subjectRepo.findById(id)
+                .orElseThrow(() -> new SubjectNotFoundException("subject with such id doesn't exist"));
+        return SubjectGetModel.toModel(subject);
+    }
+
+    public SubjectGetModel getSubject(String name) throws SubjectNotFoundException {
+        SubjectEntity subject = Optional.ofNullable(subjectRepo.findByName(name))
+                .orElseThrow(() -> new SubjectNotFoundException("subject with such name doesn't exists"));
+        return SubjectGetModel.toModel(subject);
     }
 }
