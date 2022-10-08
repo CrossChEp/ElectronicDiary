@@ -5,7 +5,9 @@ import com.diary.diary.exception.subject.SubjectAlreadyExistsException;
 import com.diary.diary.exception.subject.SubjectNotFoundException;
 import com.diary.diary.model.subject.SubjectAddModel;
 import com.diary.diary.model.subject.SubjectGetModel;
+import com.diary.diary.model.subject.SubjectUpdateModel;
 import com.diary.diary.repository.SubjectRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -51,5 +53,14 @@ public class SubjectService {
         SubjectEntity subject = Optional.ofNullable(subjectRepo.findByName(name))
                 .orElseThrow(() -> new SubjectNotFoundException("subject with such name doesn't exists"));
         return SubjectGetModel.toModel(subject);
+    }
+
+    public SubjectEntity updateSubject(SubjectUpdateModel newSubjectData) throws SubjectNotFoundException {
+        SubjectEntity subject = getSubjectById(newSubjectData.getId());
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setSkipNullEnabled(true);
+        mapper.map(newSubjectData, subject);
+        subjectRepo.save(subject);
+        return subject;
     }
 }
