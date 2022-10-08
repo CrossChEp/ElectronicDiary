@@ -13,7 +13,7 @@ public class SubjectGetModel {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Getter @Setter
-    private long id;
+    private Long id;
     @Getter @Setter
     private String name;
 

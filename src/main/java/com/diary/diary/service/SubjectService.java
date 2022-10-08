@@ -1,9 +1,11 @@
 package com.diary.diary.service;
 
 import com.diary.diary.entity.SubjectEntity;
+import com.diary.diary.exception.model.InvalidModelDataException;
 import com.diary.diary.exception.subject.SubjectAlreadyExistsException;
 import com.diary.diary.exception.subject.SubjectNotFoundException;
 import com.diary.diary.model.subject.SubjectAddModel;
+import com.diary.diary.model.subject.SubjectDeleteModel;
 import com.diary.diary.model.subject.SubjectGetModel;
 import com.diary.diary.model.subject.SubjectUpdateModel;
 import com.diary.diary.repository.SubjectRepository;
@@ -55,6 +57,11 @@ public class SubjectService {
         return SubjectGetModel.toModel(subject);
     }
 
+    public SubjectEntity getSubjectEntity(String name) throws SubjectNotFoundException {
+        return Optional.ofNullable(subjectRepo.findByName(name))
+                .orElseThrow(() -> new SubjectNotFoundException("subject with such name doesn't exists"));
+    }
+
     public SubjectEntity updateSubject(SubjectUpdateModel newSubjectData) throws SubjectNotFoundException {
         SubjectEntity subject = getSubjectById(newSubjectData.getId());
         ModelMapper mapper = new ModelMapper();
@@ -62,5 +69,21 @@ public class SubjectService {
         mapper.map(newSubjectData, subject);
         subjectRepo.save(subject);
         return subject;
+    }
+
+    public SubjectEntity deleteSubject(SubjectDeleteModel subjectDeleteData)
+            throws InvalidModelDataException, SubjectNotFoundException {
+        if(subjectDeleteData.getName() == null && subjectDeleteData.getId() == null) {
+            throw new InvalidModelDataException("the model is null");
+        }
+        SubjectEntity subject = getSubjectInDependenceOfModel(subjectDeleteData);
+        subjectRepo.delete(subject);
+        return subject;
+    }
+
+    private SubjectEntity getSubjectInDependenceOfModel(SubjectDeleteModel subjectDeleteData)
+            throws SubjectNotFoundException {
+        return subjectDeleteData.getId() == null
+                ? getSubjectEntity(subjectDeleteData.getName()) : getSubjectById(subjectDeleteData.getId());
     }
 }

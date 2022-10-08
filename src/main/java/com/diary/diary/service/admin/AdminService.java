@@ -1,4 +1,4 @@
-package com.diary.diary.service;
+package com.diary.diary.service.admin;
 
 import com.diary.diary.config.RoleNames;
 import com.diary.diary.entity.ClassEntity;
@@ -15,6 +15,9 @@ import com.diary.diary.model.admin.AdminRemoveUserFromSchoolModel;
 import com.diary.diary.repository.ClassRepository;
 import com.diary.diary.repository.SchoolRepository;
 import com.diary.diary.repository.UserRepository;
+import com.diary.diary.service.ClassService;
+import com.diary.diary.service.SchoolService;
+import com.diary.diary.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
