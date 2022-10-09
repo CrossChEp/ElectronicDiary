@@ -1,7 +1,11 @@
 package com.diary.diary.service;
 import com.diary.diary.entity.TimetableEntity;
 import com.diary.diary.exception.subject.SubjectNotFoundException;
+import com.diary.diary.exception.timetable.TimetableNotFoundException;
+import com.diary.diary.model.timetable.TimeTableUpdateModel;
 import com.diary.diary.model.timetable.TimetableAddModel;
+import com.diary.diary.model.timetable.TimetableGetModel;
+import com.diary.diary.model.timetable.TimetableModel;
 import com.diary.diary.repository.SubjectRepository;
 import com.diary.diary.repository.TimetableRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,29 +23,65 @@ public class TimetableService {
     @Autowired
     private SubjectService subjectService;
 
-    @Autowired
-    private SubjectRepository subjectRepository;
 
     public TimetableEntity addTimetable(TimetableAddModel timetableData) throws SubjectNotFoundException {
-        ObjectMapper mapper = new ObjectMapper();
-        Map timetableModelJson = mapper.convertValue(timetableData, Map.class);
-        isModelValid(timetableModelJson);
-        ModelMapper modelMapper = new ModelMapper();
-        modelMapper.getConfiguration().setSkipNullEnabled(true);
-        TimetableEntity timetable = new TimetableEntity();
-        modelMapper.map(timetableData, timetable);
+        validateModel(timetableData);
+        TimetableEntity timetable = createTimetable(timetableData);
         timetableRepo.save(timetable);
         return timetable;
     }
 
-    private void isModelValid(Map<String, List<String>> model) throws SubjectNotFoundException {
+    private void validateModel(TimetableAddModel timetableData) throws SubjectNotFoundException {
+        ObjectMapper mapper = new ObjectMapper();
+        Map timetableModelJson = mapper.convertValue(timetableData, Map.class);
+        isModelValid(timetableModelJson, false);
+    }
+
+    private void isModelValid(Map<String, List<String>> model, boolean id) throws SubjectNotFoundException {
         for(var day: model.keySet()) {
-            if(model.get(day) == null) {
+            if(model.get(day) == null || (id && day.equals("id"))) {
                 continue;
             }
             for(var subjectName: model.get(day)) {
                 subjectService.getSubjectEntity(subjectName);
             }
         }
+    }
+
+    private TimetableEntity createTimetable(TimetableAddModel timetableData) {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setSkipNullEnabled(true);
+        TimetableEntity timetable = new TimetableEntity();
+        modelMapper.map(timetableData, timetable);
+        return timetable;
+    }
+
+    public TimetableEntity updateTimetable(TimeTableUpdateModel newTimetableData)
+            throws TimetableNotFoundException, SubjectNotFoundException {
+        validateModel(newTimetableData);
+        TimetableEntity timetable = getTimetable(newTimetableData.getId());
+        updateTimetableEntity(newTimetableData, timetable);
+        timetableRepo.save(timetable);
+        return timetable;
+    }
+
+    private TimetableEntity getTimetable(long id) throws TimetableNotFoundException {
+        return timetableRepo.findById(id)
+                .orElseThrow(() -> new TimetableNotFoundException("timetable with id " + id + " not found"));
+    }
+
+    private void validateModel(TimeTableUpdateModel timetableData) throws SubjectNotFoundException {
+        ObjectMapper mapper = new ObjectMapper();
+        Map timetableModelJson = mapper.convertValue(timetableData, Map.class);
+        isModelValid(timetableModelJson, true);
+    }
+
+    private void updateTimetableEntity(TimeTableUpdateModel newTimetableData,
+                                                  TimetableEntity timetable) {
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setSkipNullEnabled(true);
+        TimetableModel timetableModel = new TimetableModel();
+        mapper.map(newTimetableData, timetableModel);
+        mapper.map(timetableModel, timetable);
     }
 }

@@ -5,5 +5,7 @@ import lombok.Setter;
 
 import java.util.List;
 
-public class TimetableAddModel extends TimetableModel {
+@Getter @Setter
+public class TimetableGetModel extends TimetableAddModel {
+    private long id;
 }

@@ -22,6 +22,9 @@ public class ListToStingConverter implements AttributeConverter<List<String>, St
 
     @Override
     public List<String> convertToEntityAttribute(String dbData) {
+        if(dbData == null) {
+            return null;
+        }
         return Arrays.asList(dbData.split(" "));
     }
 }

@@ -3,7 +3,9 @@ package com.diary.diary.service.admin;
 import com.diary.diary.config.RoleNames;
 import com.diary.diary.entity.TimetableEntity;
 import com.diary.diary.exception.subject.SubjectNotFoundException;
+import com.diary.diary.exception.timetable.TimetableNotFoundException;
 import com.diary.diary.exception.user.UserNotFoundException;
+import com.diary.diary.model.timetable.TimeTableUpdateModel;
 import com.diary.diary.model.timetable.TimetableAddModel;
 import com.diary.diary.repository.TimetableRepository;
 import com.diary.diary.service.TimetableService;
@@ -24,5 +26,11 @@ public class AdminTimetableService {
             throws UserNotFoundException, SubjectNotFoundException {
         userService.checkUserRoleOrThrow(RoleNames.ADMIN, userService.getCurrentUser());
         return timetableService.addTimetable(timetableData);
+    }
+
+    public TimetableEntity updateTimetable(TimeTableUpdateModel newTimetableData)
+        throws UserNotFoundException, TimetableNotFoundException, SubjectNotFoundException {
+        userService.checkUserRoleOrThrow(RoleNames.ADMIN, userService.getCurrentUser());
+        return timetableService.updateTimetable(newTimetableData);
     }
 }
