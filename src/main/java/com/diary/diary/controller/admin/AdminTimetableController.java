@@ -34,4 +34,13 @@ public class AdminTimetableController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
+
+    @DeleteMapping("/{timetableId}")
+    public ResponseEntity<Object> deleteTimetable(@PathVariable long timetableId) {
+        try {
+            return ResponseEntity.ok(adminTimetableService.deleteTimetable(timetableId));
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
 }

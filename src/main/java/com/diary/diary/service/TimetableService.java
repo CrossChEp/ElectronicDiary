@@ -84,4 +84,10 @@ public class TimetableService {
         mapper.map(newTimetableData, timetableModel);
         mapper.map(timetableModel, timetable);
     }
+
+    public TimetableEntity deleteTimetable(long id) throws TimetableNotFoundException {
+        TimetableEntity timetable = getTimetable(id);
+        timetableRepo.delete(timetable);
+        return timetable;
+    }
 }

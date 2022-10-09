@@ -33,4 +33,10 @@ public class AdminTimetableService {
         userService.checkUserRoleOrThrow(RoleNames.ADMIN, userService.getCurrentUser());
         return timetableService.updateTimetable(newTimetableData);
     }
+
+    public TimetableEntity deleteTimetable(long id)
+            throws UserNotFoundException, TimetableNotFoundException {
+        userService.checkUserRoleOrThrow(RoleNames.ADMIN, userService.getCurrentUser());
+        return timetableService.deleteTimetable(id);
+    }
 }
