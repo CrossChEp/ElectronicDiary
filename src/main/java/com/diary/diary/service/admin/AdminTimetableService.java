@@ -5,6 +5,7 @@ import com.diary.diary.entity.ClassEntity;
 import com.diary.diary.entity.TimetableEntity;
 import com.diary.diary.exception.school_class.ClassNotFoundException;
 import com.diary.diary.exception.subject.SubjectNotFoundException;
+import com.diary.diary.exception.timetable.TimetableAlreadyExists;
 import com.diary.diary.exception.timetable.TimetableNotFoundException;
 import com.diary.diary.exception.user.UserNotFoundException;
 import com.diary.diary.model.timetable.TimeTableUpdateModel;
@@ -48,8 +49,15 @@ public class AdminTimetableService {
     }
 
     public ClassEntity addTimetableToClass(TimetableClassModel timetableClass)
-            throws UserNotFoundException, TimetableNotFoundException, ClassNotFoundException {
+            throws UserNotFoundException, TimetableNotFoundException,
+            ClassNotFoundException, TimetableAlreadyExists {
         userService.checkUserRoleOrThrow(RoleNames.ADMIN, userService.getCurrentUser());
         return classService.addTimetableToClass(timetableClass);
+    }
+
+    public ClassEntity deleteTimetableFromClass(long classId)
+            throws UserNotFoundException, TimetableNotFoundException, ClassNotFoundException {
+        userService.checkUserRoleOrThrow(RoleNames.ADMIN, userService.getCurrentUser());
+        return classService.deleteTimetableFromClass(classId);
     }
 }

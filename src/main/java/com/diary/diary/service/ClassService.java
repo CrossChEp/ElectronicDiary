@@ -8,6 +8,7 @@ import com.diary.diary.exception.model.InvalidModelDataException;
 import com.diary.diary.exception.school.SchoolNotFoundException;
 import com.diary.diary.exception.school_class.ClassAlreadyExists;
 import com.diary.diary.exception.school_class.ClassNotFoundException;
+import com.diary.diary.exception.timetable.TimetableAlreadyExists;
 import com.diary.diary.exception.timetable.TimetableNotFoundException;
 import com.diary.diary.exception.user.UserNotFoundException;
 import com.diary.diary.model.school_class.ClassAddModel;
@@ -141,10 +142,24 @@ public class ClassService {
     }
 
     public ClassEntity addTimetableToClass(TimetableClassModel timetableClass)
-            throws TimetableNotFoundException, ClassNotFoundException {
-        TimetableEntity timetable = timetableService.getTimetable(timetableClass.getTimetableId());
+            throws TimetableNotFoundException, ClassNotFoundException, TimetableAlreadyExists {
         ClassEntity schoolClass = getClassEntity(timetableClass.getClassId());
+        if(schoolClass.getTimetable() != null) {
+            throw new TimetableAlreadyExists("this class already has timetable");
+        }
+        TimetableEntity timetable = timetableService.getTimetable(timetableClass.getTimetableId());
         schoolClass.setTimetable(timetable);
+        classRepo.save(schoolClass);
+        return schoolClass;
+    }
+
+    public ClassEntity deleteTimetableFromClass(long clasId)
+            throws ClassNotFoundException, TimetableNotFoundException {
+        ClassEntity schoolClass = getClassEntity(clasId);
+        if(schoolClass.getTimetable() == null) {
+            throw new TimetableNotFoundException("this class doesn't have timetable");
+        }
+        schoolClass.setTimetable(null);
         classRepo.save(schoolClass);
         return schoolClass;
     }

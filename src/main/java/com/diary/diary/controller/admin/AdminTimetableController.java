@@ -1,6 +1,7 @@
 package com.diary.diary.controller.admin;
 
 import com.diary.diary.exception.subject.SubjectNotFoundException;
+import com.diary.diary.exception.timetable.TimetableAlreadyExists;
 import com.diary.diary.exception.user.UserNotFoundException;
 import com.diary.diary.model.timetable.TimeTableUpdateModel;
 import com.diary.diary.model.timetable.TimetableAddModel;
@@ -49,6 +50,17 @@ public class AdminTimetableController {
     public ResponseEntity<Object> addTimetableToClass(@RequestBody TimetableClassModel timetableClass) {
         try {
             return ResponseEntity.ok(adminTimetableService.addTimetableToClass(timetableClass));
+        } catch (TimetableAlreadyExists e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @DeleteMapping("/class/{classId}")
+    public ResponseEntity<Object> deleteTimetableFromClass(@PathVariable long classId) {
+        try {
+            return ResponseEntity.ok(adminTimetableService.deleteTimetableFromClass(classId));
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
