@@ -4,6 +4,7 @@ import com.diary.diary.exception.subject.SubjectNotFoundException;
 import com.diary.diary.exception.user.UserNotFoundException;
 import com.diary.diary.model.timetable.TimeTableUpdateModel;
 import com.diary.diary.model.timetable.TimetableAddModel;
+import com.diary.diary.model.timetable.TimetableClassModel;
 import com.diary.diary.service.admin.AdminService;
 import com.diary.diary.service.admin.AdminTimetableService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,15 @@ public class AdminTimetableController {
     public ResponseEntity<Object> deleteTimetable(@PathVariable long timetableId) {
         try {
             return ResponseEntity.ok(adminTimetableService.deleteTimetable(timetableId));
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/class")
+    public ResponseEntity<Object> addTimetableToClass(@RequestBody TimetableClassModel timetableClass) {
+        try {
+            return ResponseEntity.ok(adminTimetableService.addTimetableToClass(timetableClass));
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }

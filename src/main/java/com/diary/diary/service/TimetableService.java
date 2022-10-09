@@ -1,11 +1,10 @@
 package com.diary.diary.service;
+import com.diary.diary.entity.ClassEntity;
 import com.diary.diary.entity.TimetableEntity;
+import com.diary.diary.exception.school_class.ClassNotFoundException;
 import com.diary.diary.exception.subject.SubjectNotFoundException;
 import com.diary.diary.exception.timetable.TimetableNotFoundException;
-import com.diary.diary.model.timetable.TimeTableUpdateModel;
-import com.diary.diary.model.timetable.TimetableAddModel;
-import com.diary.diary.model.timetable.TimetableGetModel;
-import com.diary.diary.model.timetable.TimetableModel;
+import com.diary.diary.model.timetable.*;
 import com.diary.diary.repository.SubjectRepository;
 import com.diary.diary.repository.TimetableRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -65,7 +64,7 @@ public class TimetableService {
         return timetable;
     }
 
-    private TimetableEntity getTimetable(long id) throws TimetableNotFoundException {
+    public TimetableEntity getTimetable(long id) throws TimetableNotFoundException {
         return timetableRepo.findById(id)
                 .orElseThrow(() -> new TimetableNotFoundException("timetable with id " + id + " not found"));
     }

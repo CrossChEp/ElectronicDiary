@@ -3,15 +3,18 @@ package com.diary.diary.service;
 import com.diary.diary.config.RoleNames;
 import com.diary.diary.entity.ClassEntity;
 import com.diary.diary.entity.SchoolEntity;
+import com.diary.diary.entity.TimetableEntity;
 import com.diary.diary.exception.model.InvalidModelDataException;
 import com.diary.diary.exception.school.SchoolNotFoundException;
 import com.diary.diary.exception.school_class.ClassAlreadyExists;
 import com.diary.diary.exception.school_class.ClassNotFoundException;
+import com.diary.diary.exception.timetable.TimetableNotFoundException;
 import com.diary.diary.exception.user.UserNotFoundException;
 import com.diary.diary.model.school_class.ClassAddModel;
 import com.diary.diary.model.school_class.ClassGetByIdModel;
 import com.diary.diary.model.school_class.ClassGetByNumberModel;
 import com.diary.diary.model.school_class.ClassGetModel;
+import com.diary.diary.model.timetable.TimetableClassModel;
 import com.diary.diary.repository.ClassRepository;
 import com.diary.diary.repository.SchoolRepository;
 import org.modelmapper.ModelMapper;
@@ -30,6 +33,9 @@ public class ClassService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private TimetableService timetableService;
 
     public ClassEntity getClassEntity(long classId) throws ClassNotFoundException {
         return classRepo.findById(classId)
@@ -131,6 +137,15 @@ public class ClassService {
         userService.checkUserRoleOrThrow(RoleNames.ADMIN, userService.getCurrentUser());
         ClassEntity schoolClass = getClassEntity(id);
         classRepo.delete(schoolClass);
+        return schoolClass;
+    }
+
+    public ClassEntity addTimetableToClass(TimetableClassModel timetableClass)
+            throws TimetableNotFoundException, ClassNotFoundException {
+        TimetableEntity timetable = timetableService.getTimetable(timetableClass.getTimetableId());
+        ClassEntity schoolClass = getClassEntity(timetableClass.getClassId());
+        schoolClass.setTimetable(timetable);
+        classRepo.save(schoolClass);
         return schoolClass;
     }
 }

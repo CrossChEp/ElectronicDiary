@@ -1,13 +1,17 @@
 package com.diary.diary.service.admin;
 
 import com.diary.diary.config.RoleNames;
+import com.diary.diary.entity.ClassEntity;
 import com.diary.diary.entity.TimetableEntity;
+import com.diary.diary.exception.school_class.ClassNotFoundException;
 import com.diary.diary.exception.subject.SubjectNotFoundException;
 import com.diary.diary.exception.timetable.TimetableNotFoundException;
 import com.diary.diary.exception.user.UserNotFoundException;
 import com.diary.diary.model.timetable.TimeTableUpdateModel;
 import com.diary.diary.model.timetable.TimetableAddModel;
+import com.diary.diary.model.timetable.TimetableClassModel;
 import com.diary.diary.repository.TimetableRepository;
+import com.diary.diary.service.ClassService;
 import com.diary.diary.service.TimetableService;
 import com.diary.diary.service.UserService;
 import org.modelmapper.ModelMapper;
@@ -21,6 +25,9 @@ public class AdminTimetableService {
     private UserService userService;
     @Autowired
     private TimetableService timetableService;
+
+    @Autowired
+    private ClassService classService;
 
     public TimetableEntity addTimetable(TimetableAddModel timetableData)
             throws UserNotFoundException, SubjectNotFoundException {
@@ -38,5 +45,11 @@ public class AdminTimetableService {
             throws UserNotFoundException, TimetableNotFoundException {
         userService.checkUserRoleOrThrow(RoleNames.ADMIN, userService.getCurrentUser());
         return timetableService.deleteTimetable(id);
+    }
+
+    public ClassEntity addTimetableToClass(TimetableClassModel timetableClass)
+            throws UserNotFoundException, TimetableNotFoundException, ClassNotFoundException {
+        userService.checkUserRoleOrThrow(RoleNames.ADMIN, userService.getCurrentUser());
+        return classService.addTimetableToClass(timetableClass);
     }
 }
