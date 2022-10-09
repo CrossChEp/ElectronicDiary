@@ -6,7 +6,7 @@ import com.diary.diary.exception.user.UserNotFoundException;
 import com.diary.diary.model.admin.AdminAddUserToClassModel;
 import com.diary.diary.model.admin.AdminRemoveUserFromClassModel;
 import com.diary.diary.model.school_class.ClassAddModel;
-import com.diary.diary.service.AdminService;
+import com.diary.diary.service.admin.AdminService;
 import com.diary.diary.service.ClassService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

@@ -13,6 +13,7 @@ public class SubjectEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Getter @Setter
     private long id;
+    @Getter @Setter
     private String name;
 
     public SubjectEntity() {
