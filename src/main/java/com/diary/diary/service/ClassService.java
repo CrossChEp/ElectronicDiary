@@ -1,16 +1,16 @@
 package com.diary.diary.service;
 
 import com.diary.diary.config.RoleNames;
-import com.diary.diary.entity.ClassEntity;
-import com.diary.diary.entity.SchoolEntity;
-import com.diary.diary.entity.TimetableEntity;
+import com.diary.diary.entity.*;
 import com.diary.diary.exception.model.InvalidModelDataException;
 import com.diary.diary.exception.school.SchoolNotFoundException;
 import com.diary.diary.exception.school_class.ClassAlreadyExists;
 import com.diary.diary.exception.school_class.ClassNotFoundException;
+import com.diary.diary.exception.subject.SubjectNotFoundException;
 import com.diary.diary.exception.timetable.TimetableAlreadyExists;
 import com.diary.diary.exception.timetable.TimetableNotFoundException;
 import com.diary.diary.exception.user.UserNotFoundException;
+import com.diary.diary.model.homework.HomeworkGetModel;
 import com.diary.diary.model.school_class.ClassAddModel;
 import com.diary.diary.model.school_class.ClassGetByIdModel;
 import com.diary.diary.model.school_class.ClassGetByNumberModel;
@@ -22,6 +22,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,6 +41,9 @@ public class ClassService {
 
     @Autowired
     private TimetableService timetableService;
+
+    @Autowired
+    private SubjectService subjectService;
 
     public ClassEntity getClassEntity(long classId) throws ClassNotFoundException {
         return classRepo.findById(classId)
@@ -162,5 +169,40 @@ public class ClassService {
         schoolClass.setTimetable(null);
         classRepo.save(schoolClass);
         return schoolClass;
+    }
+
+    public List<HomeworkGetModel> getHomework() throws UserNotFoundException {
+        UserEntity student = userService.getCurrentUser();
+        List<HomeworkEntity> homeworks = student.getUserClass().getHomework();
+        return convertToHomeworkGetModel(homeworks);
+    }
+
+    public List<HomeworkGetModel> getHomeworkByDate(String date)
+            throws UserNotFoundException, ParseException {
+        UserEntity student = userService.getCurrentUser();
+        String pattern = "yyyy-MM-dd";
+        String convertedDate = new SimpleDateFormat(pattern).parse(date).toString();
+        List<HomeworkEntity> homeworks = new ArrayList<>();
+
+        for(var homework: student.getUserClass().getHomework()) {
+            if(new SimpleDateFormat(pattern).parse(homework.getDate().toString()).toString()
+                    .equals(convertedDate)) {
+                homeworks.add(homework);
+            }
+        }
+        return convertToHomeworkGetModel(homeworks);
+    }
+
+    public List<HomeworkGetModel> getHomeworkBySubject(String subjectName)
+            throws UserNotFoundException, SubjectNotFoundException {
+        UserEntity student = userService.getCurrentUser();
+        SubjectEntity subject = subjectService.getSubjectEntity(subjectName);
+        List<HomeworkEntity> homeworks = student.getUserClass().getHomework().stream()
+                .filter(homeworkEntity -> homeworkEntity.getSubject().getId() == subject.getId()).toList();
+        return convertToHomeworkGetModel(homeworks);
+    }
+
+    private List<HomeworkGetModel> convertToHomeworkGetModel(List<HomeworkEntity> homeworks) {
+        return homeworks.stream().map(HomeworkGetModel::toModel).toList();
     }
 }
