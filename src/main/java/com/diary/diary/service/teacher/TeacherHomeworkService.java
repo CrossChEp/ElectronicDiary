@@ -1,9 +1,8 @@
-package com.diary.diary.service;
+package com.diary.diary.service.teacher;
 
 import com.diary.diary.config.RoleNames;
 import com.diary.diary.entity.ClassEntity;
 import com.diary.diary.entity.HomeworkEntity;
-import com.diary.diary.entity.SchoolEntity;
 import com.diary.diary.entity.SubjectEntity;
 import com.diary.diary.exception.homework.HomeworkNotFoundException;
 import com.diary.diary.exception.school_class.ClassNotFoundException;
@@ -14,12 +13,16 @@ import com.diary.diary.model.homework.HomeworkAddModel;
 import com.diary.diary.model.homework.HomeworkGetModel;
 import com.diary.diary.model.homework.HomeworkUpdateModel;
 import com.diary.diary.repository.HomeworkRepository;
+import com.diary.diary.service.ClassService;
+import com.diary.diary.service.HomeworkService;
+import com.diary.diary.service.SubjectService;
+import com.diary.diary.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class TeacherService {
+public class TeacherHomeworkService {
     @Autowired
     private HomeworkRepository homeworkRepo;
     @Autowired

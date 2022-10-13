@@ -1,9 +1,14 @@
 package com.diary.diary.service;
 
+import com.diary.diary.config.DateConfig;
 import com.diary.diary.config.RoleNames;
+import com.diary.diary.entity.HomeworkEntity;
+import com.diary.diary.entity.MarkEntity;
 import com.diary.diary.entity.RoleEntity;
 import com.diary.diary.exception.user.UserAlreadyExistsException;
 import com.diary.diary.exception.user.UserHasNoSuchRole;
+import com.diary.diary.model.mark.DateAndSubjectModel;
+import com.diary.diary.model.mark.MarkGetModel;
 import com.diary.diary.model.user.UserGetModel;
 import com.diary.diary.model.user.UserUpdateModel;
 import com.diary.diary.repository.RoleRepository;
@@ -11,6 +16,7 @@ import com.diary.diary.repository.UserRepository;
 import com.diary.diary.entity.UserEntity;
 import com.diary.diary.exception.user.UserNotFoundException;
 import com.diary.diary.model.user.UserAddModel;
+import com.diary.diary.service.teacher.TeacherMarkService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -22,6 +28,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -32,6 +41,8 @@ public class UserService implements UserDetailsService {
     @Autowired
     private RoleRepository roleRepo;
 
+    @Autowired
+    private MarkMethods markMethods;
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder
             = new BCryptPasswordEncoder();
@@ -137,5 +148,34 @@ public class UserService implements UserDetailsService {
     public UserEntity getUserEntity(long userId) throws UserNotFoundException {
         return userRepo.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("user with id " + userId + " not found"));
+    }
+
+    public List<MarkGetModel> getMarks() throws UserNotFoundException {
+        UserEntity student = getCurrentUser();
+        return convertToMarkGetModelList(student.getMarks());
+    }
+
+    public List<MarkGetModel> getMarksByDate(String date)
+            throws UserNotFoundException, ParseException {
+        UserEntity student = getCurrentUser();
+        List<MarkEntity> marks = student.getMarks();
+        return convertToMarkGetModelList(markMethods.filterMarksByDate(marks, date));
+    }
+
+    public List<MarkGetModel> getMarksBySubject(String subjectName) throws UserNotFoundException {
+        UserEntity student = getCurrentUser();
+        return convertToMarkGetModelList(markMethods.filterMarksBySubject(student.getMarks(), subjectName));
+    }
+
+    public List<MarkGetModel> getMarksByDateAndSubject(DateAndSubjectModel dateAndSubject)
+        throws UserNotFoundException, ParseException {
+        UserEntity student = getCurrentUser();
+        List<MarkEntity> marks = markMethods.filterMarksByDate(student.getMarks(), dateAndSubject.getDate());
+        marks = markMethods.filterMarksBySubject(marks, dateAndSubject.getSubjectName());
+        return convertToMarkGetModelList(marks);
+    }
+
+    private List<MarkGetModel> convertToMarkGetModelList(List<MarkEntity> marks) {
+        return marks.stream().map(MarkGetModel::toModel).toList();
     }
 }

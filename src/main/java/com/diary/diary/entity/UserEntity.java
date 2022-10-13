@@ -50,6 +50,10 @@ public class UserEntity {
     @Getter @Setter
     private SchoolEntity school;
 
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
+    @Getter @Setter
+    private List<MarkEntity> marks;
+
 
     public UserEntity() {
     }
