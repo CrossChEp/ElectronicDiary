@@ -15,6 +15,8 @@ public class SubjectEntity {
     private long id;
     @Getter @Setter
     private String name;
+    @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL)
+    private List<HomeworkEntity> homeworks;
 
     public SubjectEntity() {
     }

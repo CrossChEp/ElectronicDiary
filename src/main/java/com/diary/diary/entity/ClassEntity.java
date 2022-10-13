@@ -37,6 +37,9 @@ public class ClassEntity {
     @Setter
     private TimetableEntity timetable;
 
+    @OneToMany(mappedBy = "schoolClass", cascade = CascadeType.ALL)
+    private List<HomeworkEntity> homework;
+
     public ClassEntity() {
     }
 }
