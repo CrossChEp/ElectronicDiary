@@ -6,6 +6,7 @@ import com.diary.diary.exception.model.InvalidModelDataException;
 import com.diary.diary.exception.school.SchoolNotFoundException;
 import com.diary.diary.exception.school_class.ClassAlreadyExists;
 import com.diary.diary.exception.school_class.ClassNotFoundException;
+import com.diary.diary.exception.subject.SubjectNotFoundException;
 import com.diary.diary.exception.timetable.TimetableAlreadyExists;
 import com.diary.diary.exception.timetable.TimetableNotFoundException;
 import com.diary.diary.exception.user.UserNotFoundException;
@@ -40,6 +41,9 @@ public class ClassService {
 
     @Autowired
     private TimetableService timetableService;
+
+    @Autowired
+    private SubjectService subjectService;
 
     public ClassEntity getClassEntity(long classId) throws ClassNotFoundException {
         return classRepo.findById(classId)
@@ -186,6 +190,15 @@ public class ClassService {
                 homeworks.add(homework);
             }
         }
+        return convertToHomeworkGetModel(homeworks);
+    }
+
+    public List<HomeworkGetModel> getHomeworkBySubject(String subjectName)
+            throws UserNotFoundException, SubjectNotFoundException {
+        UserEntity student = userService.getCurrentUser();
+        SubjectEntity subject = subjectService.getSubjectEntity(subjectName);
+        List<HomeworkEntity> homeworks = student.getUserClass().getHomework().stream()
+                .filter(homeworkEntity -> homeworkEntity.getSubject().getId() == subject.getId()).toList();
         return convertToHomeworkGetModel(homeworks);
     }
 

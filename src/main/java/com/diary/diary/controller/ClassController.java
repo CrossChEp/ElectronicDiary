@@ -69,4 +69,13 @@ public class ClassController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
         }
     }
+
+    @GetMapping("/homework/subject/{subjectName}")
+    public ResponseEntity<Object> getHomeworkBySubject(@PathVariable String subjectName) {
+        try {
+            return ResponseEntity.ok(classService.getHomeworkBySubject(subjectName));
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
 }
