@@ -5,12 +5,14 @@ import com.diary.diary.entity.ClassEntity;
 import com.diary.diary.entity.HomeworkEntity;
 import com.diary.diary.entity.SchoolEntity;
 import com.diary.diary.entity.SubjectEntity;
+import com.diary.diary.exception.homework.HomeworkNotFoundException;
 import com.diary.diary.exception.school_class.ClassNotFoundException;
 import com.diary.diary.exception.subject.SubjectNotFoundException;
 import com.diary.diary.exception.user.UserNotFoundException;
 import com.diary.diary.model.homework.ClassSubjectHomeworkModel;
 import com.diary.diary.model.homework.HomeworkAddModel;
 import com.diary.diary.model.homework.HomeworkGetModel;
+import com.diary.diary.model.homework.HomeworkUpdateModel;
 import com.diary.diary.repository.HomeworkRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,9 @@ public class TeacherService {
 
     @Autowired
     private SubjectService subjectService;
+
+    @Autowired
+    private HomeworkService homeworkService;
 
 
     public HomeworkGetModel addHomework(HomeworkAddModel homeworkData)
@@ -49,5 +54,14 @@ public class TeacherService {
         homework.setContent(classSubjectHomeworkModel.getHomeworkAddModel().getContent());
         homework.setDate(classSubjectHomeworkModel.getHomeworkAddModel().getDate());
         return homework;
+    }
+
+    public HomeworkGetModel updateHomework(long homeworkId, HomeworkUpdateModel newHomeworkData)
+            throws HomeworkNotFoundException {
+        HomeworkEntity homework = homeworkService.getHomework(homeworkId);
+        ModelMapper mapper = new ModelMapper();
+        mapper.map(newHomeworkData, homework);
+        homeworkRepo.save(homework);
+        return HomeworkGetModel.toModel(homework);
     }
 }
