@@ -10,6 +10,7 @@ import com.diary.diary.exception.subject.SubjectNotFoundException;
 import com.diary.diary.exception.user.UserNotFoundException;
 import com.diary.diary.model.homework.ClassSubjectHomeworkModel;
 import com.diary.diary.model.homework.HomeworkAddModel;
+import com.diary.diary.model.homework.HomeworkGetModel;
 import com.diary.diary.repository.HomeworkRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class TeacherService {
     private SubjectService subjectService;
 
 
-    public HomeworkEntity addHomework(HomeworkAddModel homeworkData)
+    public HomeworkGetModel addHomework(HomeworkAddModel homeworkData)
             throws UserNotFoundException, ClassNotFoundException, SubjectNotFoundException {
         userService.checkUserRoleOrThrow(RoleNames.ADMIN, userService.getCurrentUser());
         ClassEntity schoolClass = classService.getClassEntity(homeworkData.getClassId());
@@ -38,7 +39,7 @@ public class TeacherService {
                 new ClassSubjectHomeworkModel(schoolClass, subject, homeworkData)
         );
         homeworkRepo.save(homework);
-        return homework;
+        return HomeworkGetModel.toModel(homework);
     }
 
     private HomeworkEntity generateHomeworkEntity(ClassSubjectHomeworkModel classSubjectHomeworkModel) {

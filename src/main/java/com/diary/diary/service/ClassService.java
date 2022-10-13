@@ -21,6 +21,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -166,6 +170,22 @@ public class ClassService {
     public List<HomeworkGetModel> getHomework() throws UserNotFoundException {
         UserEntity student = userService.getCurrentUser();
         List<HomeworkEntity> homeworks = student.getUserClass().getHomework();
+        return convertToHomeworkGetModel(homeworks);
+    }
+
+    public List<HomeworkGetModel> getHomeworkByDate(String date)
+            throws UserNotFoundException, ParseException {
+        UserEntity student = userService.getCurrentUser();
+        String pattern = "yyyy-MM-dd";
+        String convertedDate = new SimpleDateFormat(pattern).parse(date).toString();
+        List<HomeworkEntity> homeworks = new ArrayList<>();
+
+        for(var homework: student.getUserClass().getHomework()) {
+            if(new SimpleDateFormat(pattern).parse(homework.getDate().toString()).toString()
+                    .equals(convertedDate)) {
+                homeworks.add(homework);
+            }
+        }
         return convertToHomeworkGetModel(homeworks);
     }
 
