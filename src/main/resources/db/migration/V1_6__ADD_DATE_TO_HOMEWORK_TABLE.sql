@@ -1,0 +1,1 @@
+ALTER TABLE diary.working_schema.homeworks ADD COLUMN date DATE NOT NULL;
