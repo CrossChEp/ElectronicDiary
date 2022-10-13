@@ -18,6 +18,9 @@ public class SubjectEntity {
     @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL)
     private List<HomeworkEntity> homeworks;
 
+    @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL)
+    private List<MarkEntity> marks;
+
     public SubjectEntity() {
     }
 }

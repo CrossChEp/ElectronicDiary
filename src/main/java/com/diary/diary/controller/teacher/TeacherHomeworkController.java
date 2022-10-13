@@ -1,8 +1,8 @@
-package com.diary.diary.controller;
+package com.diary.diary.controller.teacher;
 
 import com.diary.diary.model.homework.HomeworkAddModel;
 import com.diary.diary.model.homework.HomeworkUpdateModel;
-import com.diary.diary.service.TeacherService;
+import com.diary.diary.service.teacher.TeacherHomeworkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/teacher")
-public class TeacherController {
+public class TeacherHomeworkController {
 
     @Autowired
-    private TeacherService teacherService;
+    private TeacherHomeworkService teacherService;
 
     @PostMapping("/homework")
     public ResponseEntity<Object> addHomework(@RequestBody HomeworkAddModel homeworkData) {
