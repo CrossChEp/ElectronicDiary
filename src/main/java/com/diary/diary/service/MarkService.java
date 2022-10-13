@@ -4,6 +4,7 @@ import com.diary.diary.config.DateConfig;
 import com.diary.diary.entity.MarkEntity;
 import com.diary.diary.entity.SubjectEntity;
 import com.diary.diary.entity.UserEntity;
+import com.diary.diary.exception.mark.MarkNotFoundException;
 import com.diary.diary.exception.model.InvalidModelDataException;
 import com.diary.diary.exception.subject.SubjectNotFoundException;
 import com.diary.diary.exception.user.UserNotFoundException;
@@ -47,5 +48,16 @@ public class MarkService {
         mark.setStudent(student);
         markRepo.save(mark);
         return MarkGetModel.toModel(mark);
+    }
+
+    public MarkEntity removeMark(long id) throws MarkNotFoundException {
+        MarkEntity mark = getMark(id);
+        markRepo.delete(mark);
+        return mark;
+    }
+
+    public MarkEntity getMark(long id) throws MarkNotFoundException {
+        return markRepo.findById(id)
+                .orElseThrow(() -> new MarkNotFoundException("mark with id " + id + " doesn't exist"));
     }
 }
