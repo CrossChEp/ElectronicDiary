@@ -1,9 +1,7 @@
 package com.diary.diary.service;
 
 import com.diary.diary.config.RoleNames;
-import com.diary.diary.entity.ClassEntity;
-import com.diary.diary.entity.SchoolEntity;
-import com.diary.diary.entity.TimetableEntity;
+import com.diary.diary.entity.*;
 import com.diary.diary.exception.model.InvalidModelDataException;
 import com.diary.diary.exception.school.SchoolNotFoundException;
 import com.diary.diary.exception.school_class.ClassAlreadyExists;
@@ -11,6 +9,7 @@ import com.diary.diary.exception.school_class.ClassNotFoundException;
 import com.diary.diary.exception.timetable.TimetableAlreadyExists;
 import com.diary.diary.exception.timetable.TimetableNotFoundException;
 import com.diary.diary.exception.user.UserNotFoundException;
+import com.diary.diary.model.homework.HomeworkGetModel;
 import com.diary.diary.model.school_class.ClassAddModel;
 import com.diary.diary.model.school_class.ClassGetByIdModel;
 import com.diary.diary.model.school_class.ClassGetByNumberModel;
@@ -162,5 +161,15 @@ public class ClassService {
         schoolClass.setTimetable(null);
         classRepo.save(schoolClass);
         return schoolClass;
+    }
+
+    public List<HomeworkGetModel> getHomework() throws UserNotFoundException {
+        UserEntity student = userService.getCurrentUser();
+        List<HomeworkEntity> homeworks = student.getUserClass().getHomework();
+        return convertToHomeworkGetModel(homeworks);
+    }
+
+    private List<HomeworkGetModel> convertToHomeworkGetModel(List<HomeworkEntity> homeworks) {
+        return homeworks.stream().map(HomeworkGetModel::toModel).toList();
     }
 }

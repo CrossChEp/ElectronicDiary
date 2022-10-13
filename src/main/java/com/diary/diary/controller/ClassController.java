@@ -1,5 +1,6 @@
 package com.diary.diary.controller;
 
+import com.diary.diary.exception.user.UserNotFoundException;
 import com.diary.diary.model.school_class.ClassGetByIdModel;
 import com.diary.diary.model.school_class.ClassGetByNumberModel;
 import com.diary.diary.service.ClassService;
@@ -42,6 +43,15 @@ public class ClassController {
             return ResponseEntity.ok(classService.getClassBySchoolId(classData));
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        }
+    }
+
+    @GetMapping("/homework")
+    public ResponseEntity<Object> getHomework() {
+        try {
+            return ResponseEntity.ok(classService.getHomework());
+        } catch (UserNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 }
