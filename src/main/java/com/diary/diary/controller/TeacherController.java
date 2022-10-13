@@ -33,4 +33,13 @@ public class TeacherController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
+
+    @DeleteMapping("/homework/{homeworkId}")
+    public ResponseEntity<Object> deleteHomework(@PathVariable long homeworkId) {
+        try {
+            return ResponseEntity.ok(teacherService.deleteHomework(homeworkId));
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
 }

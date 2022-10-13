@@ -64,4 +64,10 @@ public class TeacherService {
         homeworkRepo.save(homework);
         return HomeworkGetModel.toModel(homework);
     }
+
+    public HomeworkGetModel deleteHomework(long homeworkId) throws HomeworkNotFoundException {
+        HomeworkEntity homework = homeworkService.getHomework(homeworkId);
+        homeworkRepo.delete(homework);
+        return HomeworkGetModel.toModel(homework);
+    }
 }
