@@ -2,6 +2,7 @@ package com.diary.diary.controller;
 
 import com.diary.diary.exception.user.UserAlreadyExistsException;
 import com.diary.diary.exception.user.UserNotFoundException;
+import com.diary.diary.model.mark.DateAndSubjectModel;
 import com.diary.diary.model.user.UserAddModel;
 import com.diary.diary.model.user.UserUpdateModel;
 import com.diary.diary.service.UserService;
@@ -55,6 +56,44 @@ public class UserController {
         try {
             return ResponseEntity.ok(userService.deleteUser());
         } catch (UserNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/marks")
+    public ResponseEntity<Object> getMarks() {
+        try {
+            return ResponseEntity.ok(userService.getMarks());
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/marks/{date}")
+    public ResponseEntity<Object> getMarksByDate(@PathVariable String date) {
+        try {
+            return ResponseEntity.ok(userService.getMarksByDate(date));
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/marks/subject/{subjectName}")
+    public ResponseEntity<Object> getMarksBySubject(@PathVariable String subjectName) {
+        try {
+            return ResponseEntity.ok(userService.getMarksBySubject(subjectName));
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/marks/date_and_subject/{date}/{subject_name}")
+    public ResponseEntity<Object> getMarksByDateAndSubject(@PathVariable String date,
+                                                           @PathVariable String subject_name) {
+        try {
+            DateAndSubjectModel dateAndSubjectModel = new DateAndSubjectModel(date, subject_name);
+            return ResponseEntity.ok(userService.getMarksByDateAndSubject(dateAndSubjectModel));
+        } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }

@@ -26,6 +26,7 @@ public class MarkGetModel {
         mapper.map(mark, model);
         model.setSubject(SubjectGetModel.toModel(mark.getSubject()));
         model.setUser(UserGetModel.toModel(mark.getStudent()));
+        model.setDate(mark.getDate());
         return model;
     }
 }
