@@ -26,4 +26,8 @@ public class TeacherMarkService {
     public MarkGetModel removeMark(long markId) throws MarkNotFoundException {
         return MarkGetModel.toModel(markService.removeMark(markId));
     }
+
+    public MarkGetModel updateMark(long markId, int newMark) throws Exception {
+        return MarkGetModel.toModel(markService.updateMark(markId, newMark));
+    }
 }

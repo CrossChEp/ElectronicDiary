@@ -56,6 +56,17 @@ public class MarkService {
         return mark;
     }
 
+    public MarkEntity updateMark(long markId, int newMark)
+            throws MarkNotFoundException, InvalidModelDataException {
+        if(newMark < 2 || newMark > 5) {
+            throw new InvalidModelDataException("mark is invalid");
+        }
+        MarkEntity mark = getMark(markId);
+        mark.setMark(newMark);
+        markRepo.save(mark);
+        return mark;
+    }
+
     public MarkEntity getMark(long id) throws MarkNotFoundException {
         return markRepo.findById(id)
                 .orElseThrow(() -> new MarkNotFoundException("mark with id " + id + " doesn't exist"));

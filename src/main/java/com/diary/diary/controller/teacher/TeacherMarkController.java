@@ -30,4 +30,13 @@ public class TeacherMarkController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
+
+    @PutMapping("/{markId}")
+    public ResponseEntity<Object> updateMark(@PathVariable long markId, @RequestParam int newMark) {
+        try {
+            return ResponseEntity.ok(teacherMarkService.updateMark(markId, newMark));
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
 }
