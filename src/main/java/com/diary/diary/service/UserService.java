@@ -19,6 +19,7 @@ import com.diary.diary.model.user.UserAddModel;
 import com.diary.diary.service.teacher.TeacherMarkService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -33,7 +34,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
+@Service @Configurable
 public class UserService implements UserDetailsService {
 
     @Autowired
@@ -151,6 +152,7 @@ public class UserService implements UserDetailsService {
     }
 
     public List<MarkGetModel> getMarks() throws UserNotFoundException {
+        checkUserRoleOrThrow(RoleNames.ADMIN, getCurrentUser());
         UserEntity student = getCurrentUser();
         return convertToMarkGetModelList(student.getMarks());
     }

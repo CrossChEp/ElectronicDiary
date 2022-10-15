@@ -1,6 +1,8 @@
 package com.diary.diary.state;
 
 import com.diary.diary.entity.*;
+import com.diary.diary.exception.school.SchoolNotFoundException;
+import com.diary.diary.exception.subject.SubjectNotFoundException;
 import com.diary.diary.exception.user.UserNotFoundException;
 import com.diary.diary.model.admin.AdminAddUserToClassModel;
 import com.diary.diary.model.admin.AdminRemoveUserFromClassModel;
@@ -56,23 +58,23 @@ public interface UserRole {
         throw new NotImplementedException();
     }
 
-    default List<MarkGetModel> getMarksByDateAndSubject(DateAndSubjectModel dateAndSubject) {
+    default List<MarkGetModel> getMarksByDateAndSubject(DateAndSubjectModel dateAndSubject) throws UserNotFoundException, ParseException {
         throw new NotImplementedException();
     }
 
-    default SubjectGetModel getSubject(long id) {
+    default SubjectGetModel getSubject(long id) throws SubjectNotFoundException {
         throw new NotImplementedException();
     }
 
-    default SubjectGetModel getSubject(String name) {
+    default SubjectGetModel getSubject(String name) throws SubjectNotFoundException {
         throw new NotImplementedException();
     }
 
-    default SchoolGetModel getSchoolById(long schoolId) {
+    default SchoolGetModel getSchoolById(long schoolId) throws SchoolNotFoundException {
         throw new NotImplementedException();
     }
 
-    default SchoolGetModel getSchoolByNumber(int schoolNumber) {
+    default SchoolGetModel getSchoolByNumber(int schoolNumber) throws SchoolNotFoundException {
         throw new NotImplementedException();
     }
 
@@ -80,7 +82,7 @@ public interface UserRole {
         throw new NotImplementedException();
     }
 
-    default ClassGetModel getSchoolClass(ClassGetByNumberModel classData) {
+    default ClassGetModel getSchoolClass(ClassGetByNumberModel classData) throws com.diary.diary.exception.school_class.ClassNotFoundException, SchoolNotFoundException {
         throw new NotImplementedException();
     }
 
@@ -88,11 +90,11 @@ public interface UserRole {
         throw new NotImplementedException();
     }
 
-    default List<HomeworkGetModel> getHomework() {
+    default List<HomeworkGetModel> getHomework() throws UserNotFoundException {
         throw new NotImplementedException();
     }
 
-    default List<HomeworkGetModel> getHomeworkByDate(String date) {
+    default List<HomeworkGetModel> getHomeworkByDate(String date) throws UserNotFoundException, ParseException {
         throw new NotImplementedException();
     }
 

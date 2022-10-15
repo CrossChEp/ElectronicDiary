@@ -1,5 +1,6 @@
 package com.diary.diary.controller;
 
+import com.diary.diary.context.UserContext;
 import com.diary.diary.exception.user.UserAlreadyExistsException;
 import com.diary.diary.exception.user.UserNotFoundException;
 import com.diary.diary.model.mark.DateAndSubjectModel;
@@ -17,6 +18,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+//    @Autowired
+//    private UserContext userContext;
 
     @PostMapping("/register")
     public ResponseEntity<Object> register(@RequestBody UserAddModel userData) {
@@ -63,7 +67,8 @@ public class UserController {
     @GetMapping("/marks")
     public ResponseEntity<Object> getMarks() {
         try {
-            return ResponseEntity.ok(userService.getMarks());
+            UserContext userContext = new UserContext(userService);
+            return ResponseEntity.ok(userContext.getMarks());
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }

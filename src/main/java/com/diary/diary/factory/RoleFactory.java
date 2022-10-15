@@ -1,6 +1,7 @@
 package com.diary.diary.factory;
 
 import com.diary.diary.config.RoleNames;
+import com.diary.diary.service.UserService;
 import com.diary.diary.state.*;
 
 public class RoleFactory {
