@@ -8,7 +8,9 @@ import com.diary.diary.exception.user.UserNotFoundException;
 import com.diary.diary.model.admin.AdminAddUserToClassModel;
 import com.diary.diary.model.admin.AdminRemoveUserFromClassModel;
 import com.diary.diary.model.admin.AdminRemoveUserFromSchoolModel;
+import com.diary.diary.model.homework.HomeworkAddModel;
 import com.diary.diary.model.homework.HomeworkGetModel;
+import com.diary.diary.model.homework.HomeworkUpdateModel;
 import com.diary.diary.model.mark.DateAndSubjectModel;
 import com.diary.diary.model.mark.MarkAddModel;
 import com.diary.diary.model.mark.MarkGetModel;
@@ -103,6 +105,18 @@ public interface UserRole {
     }
 
     default ClassGetModel getSchoolClassById(ClassGetByIdModel classGetByIdModel) {
+        throw new NotImplementedException("user have no rights to use this functionality");
+    }
+
+    default HomeworkGetModel addHomework(HomeworkAddModel homeworkData) {
+        throw new NotImplementedException("user have no rights to use this functionality");
+    }
+
+    default HomeworkGetModel updateHomework(long homeworkId, HomeworkUpdateModel homeworkNewData) {
+        throw new NotImplementedException("user have no rights to use this functionality");
+    }
+
+    default HomeworkGetModel deleteHomework(long id) {
         throw new NotImplementedException("user have no rights to use this functionality");
     }
 

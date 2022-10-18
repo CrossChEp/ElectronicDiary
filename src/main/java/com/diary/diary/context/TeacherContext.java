@@ -1,5 +1,8 @@
 package com.diary.diary.context;
 
+import com.diary.diary.model.homework.HomeworkAddModel;
+import com.diary.diary.model.homework.HomeworkGetModel;
+import com.diary.diary.model.homework.HomeworkUpdateModel;
 import com.diary.diary.model.mark.MarkAddModel;
 import com.diary.diary.model.mark.MarkGetModel;
 import com.diary.diary.service.UserService;
@@ -33,5 +36,20 @@ public class TeacherContext {
     public MarkGetModel updateMark(long markId, int newMark) {
         UserRole userRole = ContextSystemMethods.getStateRoleOfUser(userService, applicationContext);
         return userRole.updateMark(markId, newMark);
+    }
+
+    public HomeworkGetModel addHomework(HomeworkAddModel homeworkData) {
+        UserRole userRole = ContextSystemMethods.getStateRoleOfUser(userService, applicationContext);
+        return userRole.addHomework(homeworkData);
+    }
+
+    public HomeworkGetModel updateHomework(long id, HomeworkUpdateModel newHomeworkData) {
+        UserRole userRole = ContextSystemMethods.getStateRoleOfUser(userService, applicationContext);
+        return userRole.updateHomework(id, newHomeworkData);
+    }
+
+    public HomeworkGetModel deleteHomework(long homeworkId) {
+        UserRole userRole = ContextSystemMethods.getStateRoleOfUser(userService, applicationContext);
+        return userRole.deleteHomework(homeworkId);
     }
 }

@@ -37,6 +37,7 @@ public class StudentRole extends DefaultRole {
     }
 
     public StudentRole(ApplicationContext applicationContext) {
+        super(applicationContext);
         this.userService = new UserService(applicationContext);
         this.subjectService = new SubjectService(applicationContext);
         this.schoolService = new SchoolService(applicationContext);
