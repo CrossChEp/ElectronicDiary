@@ -68,6 +68,10 @@ public interface UserRole {
         throw new NotImplementedException();
     }
 
+    default List<SubjectGetModel> getSubjects() {
+        throw new NotImplementedException();
+    }
+
     default SubjectGetModel getSubject(long id) throws SubjectNotFoundException {
         throw new NotImplementedException();
     }

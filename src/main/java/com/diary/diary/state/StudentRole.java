@@ -64,6 +64,11 @@ public class StudentRole extends DefaultRole {
     }
 
     @Override
+    public List<SubjectGetModel> getSubjects() {
+        return subjectService.getSubjects();
+    }
+
+    @Override
     public SubjectGetModel getSubject(long id) throws SubjectNotFoundException {
         return  subjectService.getSubject(id);
     }

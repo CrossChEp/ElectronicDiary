@@ -8,6 +8,7 @@ import com.diary.diary.factory.RoleFactory;
 import com.diary.diary.model.homework.HomeworkGetModel;
 import com.diary.diary.model.mark.DateAndSubjectModel;
 import com.diary.diary.model.mark.MarkGetModel;
+import com.diary.diary.model.subject.SubjectGetModel;
 import com.diary.diary.model.user.UserAddModel;
 import com.diary.diary.model.user.UserGetModel;
 import com.diary.diary.model.user.UserUpdateModel;
@@ -23,7 +24,7 @@ import org.springframework.stereotype.Service;
 import java.text.ParseException;
 import java.util.List;
 
-@Service @Configurable @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@Service @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class UserContext {
 
 
@@ -42,53 +43,48 @@ public class UserContext {
     }
 
     public UserGetModel getUser(long userId) {
-        UserRole userRole = getStateRoleOfUser();
+        UserRole userRole = ContextSystemMethods.getStateRoleOfUser(userService, applicationContext);
         return userRole.getUser(userId);
     }
 
     public List<UserGetModel> getUsers() {
-        UserRole userRole = getStateRoleOfUser();
+        UserRole userRole = ContextSystemMethods.getStateRoleOfUser(userService, applicationContext);
         return userRole.getAllUsers();
     }
 
     public UserGetModel updateUser(UserUpdateModel newUserData) {
-        UserRole userRole = getStateRoleOfUser();
+        UserRole userRole = ContextSystemMethods.getStateRoleOfUser(userService, applicationContext);
         return userRole.updateUser(newUserData);
     }
 
     public UserGetModel deleteUser() {
-        UserRole userRole = getStateRoleOfUser();
+        UserRole userRole = ContextSystemMethods.getStateRoleOfUser(userService, applicationContext);
         return userRole.deleteUser();
     }
 
     public List<MarkGetModel> getMarksByDate(String date) throws ParseException {
-        UserRole userRole = getStateRoleOfUser();
+        UserRole userRole = ContextSystemMethods.getStateRoleOfUser(userService, applicationContext);
         return userRole.getMarksByDate(date);
     }
 
     public List<MarkGetModel> getMarksByDateAndSubject(DateAndSubjectModel dateAndSubjectModel)
             throws ParseException {
-        UserRole userRole = getStateRoleOfUser();
+        UserRole userRole = ContextSystemMethods.getStateRoleOfUser(userService, applicationContext);
         return userRole.getMarksByDateAndSubject(dateAndSubjectModel);
     }
 
     public List<MarkGetModel> getMarksBySubject(String subject) {
-        UserRole userRole = getStateRoleOfUser();
+        UserRole userRole = ContextSystemMethods.getStateRoleOfUser(userService, applicationContext);
         return userRole.getMarksBySubject(subject);
     }
 
     public List<HomeworkGetModel> getHomework() throws UserNotFoundException {
-        UserRole userRole = RoleFactory.getUserRole(userService.getCurrentUser().getRole().getName(), applicationContext);
+        UserRole userRole = ContextSystemMethods.getStateRoleOfUser(userService, applicationContext);
         return userRole.getHomework();
     }
 
     public List<MarkGetModel> getMarks() throws UserNotFoundException {
-        UserRole userRole = RoleFactory.getUserRole(userService.getCurrentUser().getRole().getName(), applicationContext);
+        UserRole userRole = ContextSystemMethods.getStateRoleOfUser(userService, applicationContext);
         return userRole.getMarks();
-    }
-
-    private UserRole getStateRoleOfUser() {
-        return RoleFactory.getUserRole(userService.getCurrentUser().getRole().getName(),
-                applicationContext);
     }
 }
