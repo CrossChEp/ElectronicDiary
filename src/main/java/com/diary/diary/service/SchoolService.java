@@ -11,16 +11,25 @@ import com.diary.diary.model.school.SchoolGetModel;
 import com.diary.diary.repository.SchoolRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class SchoolService {
-    @Autowired
+
     private SchoolRepository schoolRepo;
-    @Autowired
+
     private UserService userService;
+
+    public SchoolService() {
+    }
+
+    public SchoolService(ApplicationContext applicationContext) {
+        this.schoolRepo = applicationContext.getBean(SchoolRepository.class);
+        this.userService = new UserService(applicationContext);
+    }
 
     public SchoolEntity addSchool(SchoolAddModel schoolData)
             throws SchoolAlreadyExistsException, UserNotFoundException {

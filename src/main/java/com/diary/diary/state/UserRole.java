@@ -3,6 +3,7 @@ package com.diary.diary.state;
 import com.diary.diary.entity.*;
 import com.diary.diary.exception.school.SchoolNotFoundException;
 import com.diary.diary.exception.subject.SubjectNotFoundException;
+import com.diary.diary.exception.user.UserAlreadyExistsException;
 import com.diary.diary.exception.user.UserNotFoundException;
 import com.diary.diary.model.admin.AdminAddUserToClassModel;
 import com.diary.diary.model.admin.AdminRemoveUserFromClassModel;
@@ -22,6 +23,7 @@ import com.diary.diary.model.subject.SubjectUpdateModel;
 import com.diary.diary.model.timetable.TimeTableUpdateModel;
 import com.diary.diary.model.timetable.TimetableAddModel;
 import com.diary.diary.model.timetable.TimetableClassModel;
+import com.diary.diary.model.user.UserAddModel;
 import com.diary.diary.model.user.UserGetModel;
 import com.diary.diary.model.user.UserUpdateModel;
 import org.apache.commons.lang3.NotImplementedException;
@@ -34,15 +36,19 @@ public interface UserRole {
         throw new NotImplementedException();
     }
 
+    default UserGetModel register(UserAddModel userData) throws UserAlreadyExistsException {
+        throw new NotImplementedException();
+    }
+
     default List<UserGetModel> getAllUsers() {
         throw new NotImplementedException();
     }
 
-    default UserEntity updateUser(UserUpdateModel newUserData) throws UserNotFoundException {
+    default UserGetModel updateUser(UserUpdateModel newUserData) throws UserNotFoundException {
         throw new NotImplementedException();
     }
 
-    default UserEntity deleteUser() throws UserNotFoundException {
+    default UserGetModel deleteUser() throws UserNotFoundException {
         throw new NotImplementedException();
     }
 
@@ -98,7 +104,7 @@ public interface UserRole {
         throw new NotImplementedException();
     }
 
-    default List<HomeworkGetModel> getHomeworkBySubject(String subjectName) {
+    default List<HomeworkGetModel> getHomeworkBySubject(String subjectName) throws SubjectNotFoundException {
         throw new NotImplementedException();
     }
 

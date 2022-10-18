@@ -27,12 +27,9 @@ import java.util.List;
 
 @Service @Configurable @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class StudentRole extends DefaultRole {
-
-    private final MarkService markService = new MarkService();
-    private final SubjectService subjectService = new SubjectService();
-    private final SchoolService schoolService = new SchoolService();
-    private final ClassService classService = new ClassService();
-    private final HomeworkService homeworkService = new HomeworkService();
+    private SubjectService subjectService;
+    private SchoolService schoolService;
+    private ClassService classService;
     private UserService userService;
 
     public StudentRole() {
@@ -40,6 +37,9 @@ public class StudentRole extends DefaultRole {
 
     public StudentRole(ApplicationContext applicationContext) {
         this.userService = new UserService(applicationContext);
+        this.subjectService = new SubjectService(applicationContext);
+        this.schoolService = new SchoolService(applicationContext);
+        this.classService = new ClassService(applicationContext);
     }
 
     @Override
@@ -60,7 +60,7 @@ public class StudentRole extends DefaultRole {
     @Override
     public List<MarkGetModel> getMarksByDateAndSubject(DateAndSubjectModel dateAndSubject)
             throws UserNotFoundException, ParseException {
-        return userService.getMarksByDateAndSubject     (dateAndSubject);
+        return userService.getMarksByDateAndSubject(dateAndSubject);
     }
 
     @Override
@@ -111,7 +111,7 @@ public class StudentRole extends DefaultRole {
     }
 
     @Override
-    public List<HomeworkGetModel> getHomeworkBySubject(String subjectName) {
-        return super.getHomeworkBySubject(subjectName);
+    public List<HomeworkGetModel> getHomeworkBySubject(String subjectName) throws SubjectNotFoundException {
+        return classService.getHomeworkBySubject(subjectName);
     }
 }

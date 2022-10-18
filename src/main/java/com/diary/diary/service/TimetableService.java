@@ -10,6 +10,7 @@ import com.diary.diary.repository.TimetableRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +23,13 @@ public class TimetableService {
     @Autowired
     private SubjectService subjectService;
 
+    public TimetableService() {
+    }
+
+    public TimetableService(ApplicationContext applicationContext) {
+        this.timetableRepo = applicationContext.getBean(TimetableRepository.class);
+        this.subjectService = new SubjectService(applicationContext);
+    }
 
     public TimetableEntity addTimetable(TimetableAddModel timetableData) throws SubjectNotFoundException {
         validateModel(timetableData);

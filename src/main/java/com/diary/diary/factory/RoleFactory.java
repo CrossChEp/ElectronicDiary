@@ -17,7 +17,8 @@ public class RoleFactory {
 
     private static void buildUserRole(String roleString, ApplicationContext applicationContext) {
         switch (roleString) {
-            case RoleNames.DEFAULT -> userRole = new DefaultRole();
+            case RoleNames.UNREGISTERED -> userRole = new UnregisteredRole(applicationContext);
+            case RoleNames.DEFAULT -> userRole = new DefaultRole(applicationContext);
             case RoleNames.STUDENT -> userRole = new StudentRole(applicationContext);
             case RoleNames.TEACHER -> userRole = new TeacherRole(applicationContext);
             case RoleNames.ADMIN -> userRole = new AdminRole(applicationContext);

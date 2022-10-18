@@ -67,7 +67,7 @@ public class UserService implements UserDetailsService {
         return new User(Long.toString(user.getId()), user.getPassword(), List.of(userRole));
     }
 
-    public UserEntity addUser(UserAddModel userData) throws UserAlreadyExistsException {
+    public UserGetModel addUser(UserAddModel userData) throws UserAlreadyExistsException {
         UserEntity user = userRepo.findByLogin(userData.getLogin());
         if(user != null) {
             throw new UserAlreadyExistsException("user with such login already exists");
@@ -75,7 +75,7 @@ public class UserService implements UserDetailsService {
         userData.setPassword(bCryptPasswordEncoder.encode(userData.getPassword()));
         user = createUser(userData);
         userRepo.save(user);
-        return user;
+        return UserGetModel.toModel(user);
     }
 
     private UserEntity createUser(UserAddModel userData) {
@@ -115,11 +115,11 @@ public class UserService implements UserDetailsService {
         return UserGetModel.toModel(user);
     }
 
-    public UserEntity updateUser(UserUpdateModel newUserData) throws UserNotFoundException{
+    public UserGetModel updateUser(UserUpdateModel newUserData) throws UserNotFoundException{
         UserEntity user = getCurrentUser();
         updateUserData(newUserData, user);
         userRepo.save(user);
-        return user;
+        return UserGetModel.toModel(user);
     }
 
     public UserEntity getCurrentUser() throws UserNotFoundException {
@@ -146,10 +146,10 @@ public class UserService implements UserDetailsService {
         return bCryptPasswordEncoder.encode(password);
     }
 
-    public UserEntity deleteUser() throws UserNotFoundException {
+    public UserGetModel deleteUser() throws UserNotFoundException {
         UserEntity user = getCurrentUser();
         userRepo.delete(user);
-        return user;
+        return UserGetModel.toModel(user);
     }
 
     public void checkUserRoleOrThrow(String userRole, UserEntity user)  {

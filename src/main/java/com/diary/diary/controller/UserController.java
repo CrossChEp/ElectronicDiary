@@ -6,7 +6,6 @@ import com.diary.diary.exception.user.UserNotFoundException;
 import com.diary.diary.model.mark.DateAndSubjectModel;
 import com.diary.diary.model.user.UserAddModel;
 import com.diary.diary.model.user.UserUpdateModel;
-import com.diary.diary.service.UserService;
 import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,43 +16,51 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/user")
 public class UserController {
 
-    private final UserService userService;
-
     private final UserContext userContext;
 
     @Autowired
-    public UserController(UserService userService, UserContext userContext) {
-        this.userService = userService;
+    public UserController(UserContext userContext) {
         this.userContext = userContext;
     }
 
     @PostMapping("/register")
     public ResponseEntity<Object> register(@RequestBody UserAddModel userData) {
         try {
-            return ResponseEntity.ok(userService.addUser(userData));
+            return ResponseEntity.ok(userContext.register(userData));
         } catch (UserAlreadyExistsException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+            return ControllerServiceMethods
+                    .getErrorResponse(HttpStatus.FORBIDDEN, "403", e.getMessage());
         }
     }
 
     @GetMapping("/{userID}")
     public ResponseEntity<Object> getUser(@PathVariable long userID) {
         try {
-            return ResponseEntity.ok(userService.getUser(userID));
-        } catch (UserNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return ResponseEntity.ok(userContext.getUser(userID));
+        }
+        catch (NotImplementedException e) {
+            return ControllerServiceMethods
+                    .getErrorResponse(HttpStatus.FORBIDDEN, "403", e.getMessage());
+        }
+        catch (UserNotFoundException e) {
+            return ControllerServiceMethods
+                    .getErrorResponse(HttpStatus.NOT_FOUND, "404", e.getMessage());
         }
     }
 
     @GetMapping
     public ResponseEntity<Object> getUsers() {
-        return ResponseEntity.ok(userService.getUsers());
+        return ResponseEntity.ok(userContext.getUsers());
     }
 
     @PutMapping
     public ResponseEntity<Object> updateUser(@RequestBody UserUpdateModel newUserData) {
         try {
-            return ResponseEntity.ok(userService.updateUser(newUserData));
+            return ResponseEntity.ok(userContext.updateUser(newUserData));
+        }
+        catch (NotImplementedException e) {
+            return ControllerServiceMethods
+                    .getErrorResponse(HttpStatus.FORBIDDEN, "403", e.getMessage());
         }
         catch (UserNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -63,9 +70,15 @@ public class UserController {
     @DeleteMapping
     public ResponseEntity<Object> deleteUser() {
         try {
-            return ResponseEntity.ok(userService.deleteUser());
-        } catch (UserNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return ResponseEntity.ok(userContext.deleteUser());
+        }
+        catch (NotImplementedException e) {
+            return ControllerServiceMethods
+                    .getErrorResponse(HttpStatus.FORBIDDEN, "403", e.getMessage());
+        }
+        catch (UserNotFoundException e) {
+            return ControllerServiceMethods
+                    .getErrorResponse(HttpStatus.NOT_FOUND, "404", e.getMessage());
         }
     }
 
@@ -77,25 +90,36 @@ public class UserController {
             return new ResponseEntity<>("you have no rights", HttpStatus.FORBIDDEN);
         }
         catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return ControllerServiceMethods
+                    .getErrorResponse(HttpStatus.NOT_FOUND, "404", e.getMessage());
         }
     }
 
     @GetMapping("/marks/{date}")
     public ResponseEntity<Object> getMarksByDate(@PathVariable String date) {
         try {
-            return ResponseEntity.ok(userService.getMarksByDate(date));
+            return ResponseEntity.ok(userContext.getMarksByDate(date));
+        }
+        catch (NotImplementedException e) {
+            return ControllerServiceMethods
+                    .getErrorResponse(HttpStatus.FORBIDDEN, "403", e.getMessage());
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return ControllerServiceMethods
+                    .getErrorResponse(HttpStatus.NOT_FOUND, "404", e.getMessage());
         }
     }
 
     @GetMapping("/marks/subject/{subjectName}")
     public ResponseEntity<Object> getMarksBySubject(@PathVariable String subjectName) {
         try {
-            return ResponseEntity.ok(userService.getMarksBySubject(subjectName));
+            return ResponseEntity.ok(userContext.getMarksBySubject(subjectName));
+        }
+        catch (NotImplementedException e) {
+            return ControllerServiceMethods
+                    .getErrorResponse(HttpStatus.FORBIDDEN, "403", e.getMessage());
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return ControllerServiceMethods
+                    .getErrorResponse(HttpStatus.NOT_FOUND, "404", e.getMessage());
         }
     }
 
@@ -104,9 +128,15 @@ public class UserController {
                                                            @PathVariable String subject_name) {
         try {
             DateAndSubjectModel dateAndSubjectModel = new DateAndSubjectModel(date, subject_name);
-            return ResponseEntity.ok(userService.getMarksByDateAndSubject(dateAndSubjectModel));
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return ResponseEntity.ok(userContext.getMarksByDateAndSubject(dateAndSubjectModel));
+        }
+        catch (NotImplementedException e) {
+            return ControllerServiceMethods
+                    .getErrorResponse(HttpStatus.FORBIDDEN, "403", e.getMessage());
+        }
+        catch (Exception e) {
+            return ControllerServiceMethods
+                    .getErrorResponse(HttpStatus.NOT_FOUND, "404", e.getMessage());
         }
     }
 }

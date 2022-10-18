@@ -1,21 +1,30 @@
 package com.diary.diary.state;
 
 import com.diary.diary.entity.UserEntity;
+import com.diary.diary.exception.user.UserAlreadyExistsException;
 import com.diary.diary.exception.user.UserNotFoundException;
+import com.diary.diary.model.user.UserAddModel;
 import com.diary.diary.model.user.UserGetModel;
 import com.diary.diary.model.user.UserUpdateModel;
 import com.diary.diary.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service @Configurable
-public class DefaultRole implements UserRole {
+public class DefaultRole extends UnregisteredRole {
 
-    @Autowired
     private UserService userService;
+
+    public DefaultRole() {
+    }
+
+    public DefaultRole(ApplicationContext applicationContext) {
+        this.userService = applicationContext.getBean(UserService.class);
+    }
 
     @Override
     public UserGetModel getUser(long id) throws UserNotFoundException {
@@ -28,12 +37,12 @@ public class DefaultRole implements UserRole {
     }
 
     @Override
-    public UserEntity updateUser(UserUpdateModel newUserData) throws UserNotFoundException {
+    public UserGetModel updateUser(UserUpdateModel newUserData) throws UserNotFoundException {
         return userService.updateUser(newUserData);
     }
 
     @Override
-    public UserEntity deleteUser() throws UserNotFoundException {
+    public UserGetModel deleteUser() throws UserNotFoundException {
         return userService.deleteUser();
     }
 }
