@@ -7,6 +7,7 @@ import com.diary.diary.model.mark.DateAndSubjectModel;
 import com.diary.diary.model.user.UserAddModel;
 import com.diary.diary.model.user.UserUpdateModel;
 import com.diary.diary.service.UserService;
+import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,11 +17,15 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/user")
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-//    @Autowired
-//    private UserContext userContext;
+    private final UserContext userContext;
+
+    @Autowired
+    public UserController(UserService userService, UserContext userContext) {
+        this.userService = userService;
+        this.userContext = userContext;
+    }
 
     @PostMapping("/register")
     public ResponseEntity<Object> register(@RequestBody UserAddModel userData) {
@@ -67,9 +72,11 @@ public class UserController {
     @GetMapping("/marks")
     public ResponseEntity<Object> getMarks() {
         try {
-            UserContext userContext = new UserContext(userService);
             return ResponseEntity.ok(userContext.getMarks());
-        } catch (Exception e) {
+        } catch (NotImplementedException e) {
+            return new ResponseEntity<>("you have no rights", HttpStatus.FORBIDDEN);
+        }
+        catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }

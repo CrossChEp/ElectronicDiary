@@ -1,5 +1,6 @@
 package com.diary.diary.state;
 
+import com.diary.diary.entity.UserEntity;
 import com.diary.diary.exception.school.SchoolNotFoundException;
 import com.diary.diary.exception.school_class.ClassNotFoundException;
 import com.diary.diary.exception.subject.SubjectNotFoundException;
@@ -11,11 +12,20 @@ import com.diary.diary.model.school.SchoolGetModel;
 import com.diary.diary.model.school_class.ClassGetByNumberModel;
 import com.diary.diary.model.school_class.ClassGetModel;
 import com.diary.diary.model.subject.SubjectGetModel;
+import com.diary.diary.repository.UserRepository;
 import com.diary.diary.service.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Scope;
+import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
+import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.util.List;
 
+@Service @Configurable @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class StudentRole extends DefaultRole {
 
     private final MarkService markService = new MarkService();
@@ -23,7 +33,14 @@ public class StudentRole extends DefaultRole {
     private final SchoolService schoolService = new SchoolService();
     private final ClassService classService = new ClassService();
     private final HomeworkService homeworkService = new HomeworkService();
-    private final UserService userService = new UserService();
+    private UserService userService;
+
+    public StudentRole() {
+    }
+
+    public StudentRole(ApplicationContext applicationContext) {
+        this.userService = new UserService(applicationContext);
+    }
 
     @Override
     public List<MarkGetModel> getMarks() throws UserNotFoundException {

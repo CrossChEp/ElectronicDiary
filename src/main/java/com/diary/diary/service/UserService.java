@@ -20,6 +20,10 @@ import com.diary.diary.service.teacher.TeacherMarkService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Scope;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -30,11 +34,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
 
-@Service @Configurable
+@Service @Configurable @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class UserService implements UserDetailsService {
 
     @Autowired
@@ -48,6 +50,12 @@ public class UserService implements UserDetailsService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder
             = new BCryptPasswordEncoder();
 
+    public UserService() {
+    }
+
+    public UserService(ApplicationContext applicationContext) {
+        this.userRepo = applicationContext.getBean(UserRepository.class);
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -115,8 +123,12 @@ public class UserService implements UserDetailsService {
     }
 
     public UserEntity getCurrentUser() throws UserNotFoundException {
-        Long userId = Long.valueOf((String) SecurityContextHolder
-                .getContext().getAuthentication().getPrincipal());
+        Authentication authentication = SecurityContextHolder
+                .getContext().getAuthentication();
+        if(authentication == null) {
+            return null;
+        }
+        Long userId = Long.valueOf((String) authentication.getPrincipal());
         return userRepo.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("current user wasn't found"));
     }
@@ -152,7 +164,6 @@ public class UserService implements UserDetailsService {
     }
 
     public List<MarkGetModel> getMarks() throws UserNotFoundException {
-        checkUserRoleOrThrow(RoleNames.ADMIN, getCurrentUser());
         UserEntity student = getCurrentUser();
         return convertToMarkGetModelList(student.getMarks());
     }

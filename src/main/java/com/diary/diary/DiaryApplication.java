@@ -1,6 +1,7 @@
 package com.diary.diary;
 
 import com.diary.diary.config.RoleNames;
+import com.diary.diary.context.UserContext;
 import com.diary.diary.repository.RoleRepository;
 import com.diary.diary.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,5 +22,4 @@ public class DiaryApplication {
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
-
 }
