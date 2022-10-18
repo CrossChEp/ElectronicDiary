@@ -14,6 +14,7 @@ import com.diary.diary.model.mark.MarkGetModel;
 import com.diary.diary.model.school.SchoolAddModel;
 import com.diary.diary.model.school.SchoolGetModel;
 import com.diary.diary.model.school_class.ClassAddModel;
+import com.diary.diary.model.school_class.ClassGetByIdModel;
 import com.diary.diary.model.school_class.ClassGetByNumberModel;
 import com.diary.diary.model.school_class.ClassGetModel;
 import com.diary.diary.model.subject.SubjectAddModel;
@@ -97,6 +98,10 @@ public interface UserRole {
     }
 
     default List<ClassGetModel> getClasses() {
+        throw new NotImplementedException("user have no rights to use this functionality");
+    }
+
+    default ClassGetModel getSchoolClassById(ClassGetByIdModel classGetByIdModel) {
         throw new NotImplementedException("user have no rights to use this functionality");
     }
 

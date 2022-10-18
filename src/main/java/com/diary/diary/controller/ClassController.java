@@ -1,9 +1,11 @@
 package com.diary.diary.controller;
 
+import com.diary.diary.context.UserClassContext;
 import com.diary.diary.exception.user.UserNotFoundException;
 import com.diary.diary.model.school_class.ClassGetByIdModel;
 import com.diary.diary.model.school_class.ClassGetByNumberModel;
 import com.diary.diary.service.ClassService;
+import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -17,12 +19,16 @@ import java.util.Date;
 @RequestMapping("/api/class")
 public class ClassController {
 
+    private final UserClassContext userClassContext;
+
     @Autowired
-    private ClassService classService;
+    public ClassController(UserClassContext userClassContext) {
+        this.userClassContext = userClassContext;
+    }
 
     @GetMapping
     public ResponseEntity<Object> getClasses() {
-        return ResponseEntity.ok(classService.getClasses());
+        return ResponseEntity.ok(userClassContext.getClasses());
     }
 
     @GetMapping("/number/{schoolNumber}/{classNumber}/{classLetter}")
@@ -32,9 +38,15 @@ public class ClassController {
         try {
             ClassGetByNumberModel classGetByNumberModel =
                     new ClassGetByNumberModel(schoolNumber, classNumber, classLetter);
-            return ResponseEntity.ok(classService.getSchoolClass(classGetByNumberModel));
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return ResponseEntity.ok(userClassContext.getSchoolClass(classGetByNumberModel));
+        }
+        catch (NotImplementedException e) {
+            return ControllerServiceMethods
+                    .getErrorResponse(HttpStatus.FORBIDDEN, "403", e.getMessage());
+        }
+        catch (Exception e) {
+            return ControllerServiceMethods
+                    .getErrorResponse(HttpStatus.NOT_FOUND, "404", e.getMessage());
         }
     }
 
@@ -44,38 +56,59 @@ public class ClassController {
                                                      @PathVariable char classLetter) {
         try {
             ClassGetByIdModel classData = new ClassGetByIdModel(schoolNumberId, classNumber, classLetter);
-            return ResponseEntity.ok(classService.getClassBySchoolId(classData));
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+            return ResponseEntity.ok(userClassContext.getSchoolClassById(classData));
+        }
+        catch (NotImplementedException e) {
+            return ControllerServiceMethods
+                    .getErrorResponse(HttpStatus.FORBIDDEN, "403", e.getMessage());
+        }
+        catch (Exception e) {
+            return ControllerServiceMethods
+                    .getErrorResponse(HttpStatus.FORBIDDEN, "403", e.getMessage());
         }
     }
 
     @GetMapping("/homework")
     public ResponseEntity<Object> getHomework() {
         try {
-            return ResponseEntity.ok(classService.getHomework());
-        } catch (UserNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return ResponseEntity.ok(userClassContext.getHomework());
+        }
+        catch (NotImplementedException e) {
+            return ControllerServiceMethods
+                    .getErrorResponse(HttpStatus.FORBIDDEN, "403", e.getMessage());
+        }
+        catch (UserNotFoundException e) {
+            return ControllerServiceMethods
+                    .getErrorResponse(HttpStatus.NOT_FOUND, "404", e.getMessage());
         }
     }
 
     @GetMapping("/homework/{date}")
     public ResponseEntity<Object> getHomeworkByDate(@PathVariable String date) {
         try {
-            return ResponseEntity.ok(classService.getHomeworkByDate(date));
-        } catch (UserNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        } catch (ParseException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+            return ResponseEntity.ok(userClassContext.getHomeworkByDate(date));
+        }
+        catch (UserNotFoundException e) {
+            return ControllerServiceMethods
+                    .getErrorResponse(HttpStatus.NOT_FOUND, "404", e.getMessage());
+        } catch (ParseException | NotImplementedException e) {
+            return ControllerServiceMethods
+                    .getErrorResponse(HttpStatus.FORBIDDEN, "403", e.getMessage());
         }
     }
 
     @GetMapping("/homework/subject/{subjectName}")
     public ResponseEntity<Object> getHomeworkBySubject(@PathVariable String subjectName) {
         try {
-            return ResponseEntity.ok(classService.getHomeworkBySubject(subjectName));
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return ResponseEntity.ok(userClassContext.getHomeworkBySubject(subjectName));
+        }
+        catch (NotImplementedException e) {
+            return ControllerServiceMethods
+                    .getErrorResponse(HttpStatus.FORBIDDEN, "403", e.getMessage());
+        }
+        catch (Exception e) {
+            return ControllerServiceMethods
+                    .getErrorResponse(HttpStatus.NOT_FOUND, "404", e.getMessage());
         }
     }
 }

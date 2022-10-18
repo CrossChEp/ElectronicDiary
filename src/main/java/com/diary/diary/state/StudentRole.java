@@ -9,6 +9,7 @@ import com.diary.diary.model.homework.HomeworkGetModel;
 import com.diary.diary.model.mark.DateAndSubjectModel;
 import com.diary.diary.model.mark.MarkGetModel;
 import com.diary.diary.model.school.SchoolGetModel;
+import com.diary.diary.model.school_class.ClassGetByIdModel;
 import com.diary.diary.model.school_class.ClassGetByNumberModel;
 import com.diary.diary.model.school_class.ClassGetModel;
 import com.diary.diary.model.subject.SubjectGetModel;
@@ -97,6 +98,11 @@ public class StudentRole extends DefaultRole {
     public ClassGetModel getSchoolClass(ClassGetByNumberModel classData)
             throws SchoolNotFoundException, ClassNotFoundException{
         return classService.getSchoolClass(classData);
+    }
+
+    @Override
+    public ClassGetModel getSchoolClassById(ClassGetByIdModel classGetByIdModel) {
+        return classService.getClassBySchoolId(classGetByIdModel);
     }
 
     @Override
