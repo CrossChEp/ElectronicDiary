@@ -1,8 +1,6 @@
 package com.diary.diary.service;
 
-import com.diary.diary.config.DateConfig;
 import com.diary.diary.config.RoleNames;
-import com.diary.diary.entity.HomeworkEntity;
 import com.diary.diary.entity.MarkEntity;
 import com.diary.diary.entity.RoleEntity;
 import com.diary.diary.exception.user.UserAlreadyExistsException;
@@ -16,7 +14,6 @@ import com.diary.diary.repository.UserRepository;
 import com.diary.diary.entity.UserEntity;
 import com.diary.diary.exception.user.UserNotFoundException;
 import com.diary.diary.model.user.UserAddModel;
-import com.diary.diary.service.teacher.TeacherMarkService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;

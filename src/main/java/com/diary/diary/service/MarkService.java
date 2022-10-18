@@ -13,6 +13,8 @@ import com.diary.diary.model.mark.MarkGetModel;
 import com.diary.diary.repository.MarkRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
@@ -23,14 +25,20 @@ import java.util.List;
 @Service
 public class MarkService {
 
-    @Autowired
     private MarkRepository markRepo;
 
-    @Autowired
     private SubjectService subjectService;
 
-    @Autowired
     private UserService userService;
+
+    public MarkService() {
+    }
+
+    public MarkService(ApplicationContext applicationContext) {
+        userService = new UserService(applicationContext);
+        subjectService = new SubjectService(applicationContext);
+        markRepo = applicationContext.getBean(MarkRepository.class);
+    }
 
     public MarkGetModel addMark(MarkAddModel markData)
             throws SubjectNotFoundException, UserNotFoundException, InvalidModelDataException {
@@ -50,13 +58,13 @@ public class MarkService {
         return MarkGetModel.toModel(mark);
     }
 
-    public MarkEntity removeMark(long id) throws MarkNotFoundException {
+    public MarkGetModel removeMark(long id) throws MarkNotFoundException {
         MarkEntity mark = getMark(id);
         markRepo.delete(mark);
-        return mark;
+        return MarkGetModel.toModel(mark);
     }
 
-    public MarkEntity updateMark(long markId, int newMark)
+    public MarkGetModel updateMark(long markId, int newMark)
             throws MarkNotFoundException, InvalidModelDataException {
         if(newMark < 2 || newMark > 5) {
             throw new InvalidModelDataException("mark is invalid");
@@ -64,7 +72,7 @@ public class MarkService {
         MarkEntity mark = getMark(markId);
         mark.setMark(newMark);
         markRepo.save(mark);
-        return mark;
+        return MarkGetModel.toModel(mark);
     }
 
     public MarkEntity getMark(long id) throws MarkNotFoundException {

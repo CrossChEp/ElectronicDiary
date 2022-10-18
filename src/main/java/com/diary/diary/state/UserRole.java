@@ -10,6 +10,7 @@ import com.diary.diary.model.admin.AdminRemoveUserFromClassModel;
 import com.diary.diary.model.admin.AdminRemoveUserFromSchoolModel;
 import com.diary.diary.model.homework.HomeworkGetModel;
 import com.diary.diary.model.mark.DateAndSubjectModel;
+import com.diary.diary.model.mark.MarkAddModel;
 import com.diary.diary.model.mark.MarkGetModel;
 import com.diary.diary.model.school.SchoolAddModel;
 import com.diary.diary.model.school.SchoolGetModel;
@@ -114,6 +115,18 @@ public interface UserRole {
     }
 
     default List<HomeworkGetModel> getHomeworkBySubject(String subjectName) throws SubjectNotFoundException {
+        throw new NotImplementedException("user have no rights to use this functionality");
+    }
+
+    default MarkGetModel addMark(MarkAddModel markData) {
+        throw new NotImplementedException("user have no rights to use this functionality");
+    }
+
+    default MarkGetModel removeMark(long id) {
+        throw new NotImplementedException("user have no rights to use this functionality");
+    }
+
+    default MarkGetModel updateMark(long markId, int mark) {
         throw new NotImplementedException("user have no rights to use this functionality");
     }
 
