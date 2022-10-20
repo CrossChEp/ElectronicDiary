@@ -20,6 +20,7 @@ import com.diary.diary.repository.ClassRepository;
 import com.diary.diary.repository.SchoolRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
@@ -31,19 +32,28 @@ import java.util.Optional;
 
 @Service
 public class ClassService {
-    @Autowired
+
     private ClassRepository classRepo;
-    @Autowired
+
     private SchoolRepository schoolRepo;
 
-    @Autowired
+
     private UserService userService;
 
-    @Autowired
     private TimetableService timetableService;
 
-    @Autowired
     private SubjectService subjectService;
+
+    public ClassService() {
+    }
+
+    public ClassService(ApplicationContext applicationContext) {
+        this.userService = new UserService(applicationContext);
+        this.subjectService = new SubjectService(applicationContext);
+        this.classRepo = applicationContext.getBean(ClassRepository.class);
+        this.schoolRepo = applicationContext.getBean(SchoolRepository.class);
+        this.timetableService = new TimetableService(applicationContext);
+    }
 
     public ClassEntity getClassEntity(long classId) throws ClassNotFoundException {
         return classRepo.findById(classId)

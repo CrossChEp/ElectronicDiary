@@ -11,6 +11,7 @@ import com.diary.diary.model.subject.SubjectUpdateModel;
 import com.diary.diary.repository.SubjectRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,8 +19,15 @@ import java.util.Optional;
 
 @Service
 public class SubjectService {
-    @Autowired
+
     private SubjectRepository subjectRepo;
+
+    public SubjectService() {
+    }
+
+    public SubjectService(ApplicationContext applicationContext) {
+        this.subjectRepo = applicationContext.getBean(SubjectRepository.class);
+    }
 
     public SubjectEntity getSubjectById(long subjectId) throws SubjectNotFoundException {
         return subjectRepo.findById(subjectId)

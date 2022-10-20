@@ -11,21 +11,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
+@Getter @Setter
 public class ClassGetModel {
 
-    @Getter @Setter
     private long id;
 
-    @Getter @Setter
     private int number;
 
-    @Getter @Setter
     private char letter;
 
-    @Getter @Setter
     private SchoolGetModel school;
 
-    @Getter @Setter
     private List<UserGetModel> students;
 
     public static ClassGetModel toModel(ClassEntity schoolClass) {

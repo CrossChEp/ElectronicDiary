@@ -7,7 +7,6 @@ import java.util.List;
 
 @Getter @Setter
 public class TimetableModel {
-    private long id;
     private List<String> monday;
     private List<String> tuesday;
     private List<String> wednesday;

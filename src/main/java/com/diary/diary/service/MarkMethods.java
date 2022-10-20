@@ -2,6 +2,7 @@ package com.diary.diary.service;
 
 import com.diary.diary.config.DateConfig;
 import com.diary.diary.entity.MarkEntity;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
@@ -9,7 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
+@Service @Configurable
 public class MarkMethods {
     public List<MarkEntity> filterMarksByDate(List<MarkEntity> marks, String date) throws ParseException {
         date = new SimpleDateFormat(DateConfig.DEFAULT_DATE_FORMAT_PATTERN).parse(date).toString();

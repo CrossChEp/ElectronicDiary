@@ -9,36 +9,30 @@ import java.util.List;
 
 @Entity
 @Table(name = "classes", schema = "working_schema")
+@Getter @Setter
 public class ClassEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Getter @Setter
     private long id;
 
-    @Getter @Setter
     private int number;
 
-    @Getter @Setter
     private char letter;
 
     @OneToMany(mappedBy = "userClass", cascade = CascadeType.ALL)
-    @Getter @Setter
     @JsonIgnore
     private List<UserEntity> students;
 
     @ManyToOne
     @JoinColumn(name = "schoolid")
-    @Getter @Setter
     private SchoolEntity school;
 
     @OneToOne
     @JoinColumn(name = "timetableid")
-    @JsonIgnore @Getter
-    @Setter
+    @JsonIgnore
     private TimetableEntity timetable;
 
     @OneToMany(mappedBy = "schoolClass", cascade = CascadeType.ALL)
-    @Getter @Setter
     private List<HomeworkEntity> homework;
 
     public ClassEntity() {

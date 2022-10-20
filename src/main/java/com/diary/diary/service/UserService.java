@@ -1,8 +1,6 @@
 package com.diary.diary.service;
 
-import com.diary.diary.config.DateConfig;
 import com.diary.diary.config.RoleNames;
-import com.diary.diary.entity.HomeworkEntity;
 import com.diary.diary.entity.MarkEntity;
 import com.diary.diary.entity.RoleEntity;
 import com.diary.diary.exception.user.UserAlreadyExistsException;
@@ -16,9 +14,13 @@ import com.diary.diary.repository.UserRepository;
 import com.diary.diary.entity.UserEntity;
 import com.diary.diary.exception.user.UserNotFoundException;
 import com.diary.diary.model.user.UserAddModel;
-import com.diary.diary.service.teacher.TeacherMarkService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Scope;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -29,11 +31,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
 
-@Service
+@Service @Configurable @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class UserService implements UserDetailsService {
 
     @Autowired
@@ -47,6 +47,12 @@ public class UserService implements UserDetailsService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder
             = new BCryptPasswordEncoder();
 
+    public UserService() {
+    }
+
+    public UserService(ApplicationContext applicationContext) {
+        this.userRepo = applicationContext.getBean(UserRepository.class);
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -58,7 +64,7 @@ public class UserService implements UserDetailsService {
         return new User(Long.toString(user.getId()), user.getPassword(), List.of(userRole));
     }
 
-    public UserEntity addUser(UserAddModel userData) throws UserAlreadyExistsException {
+    public UserGetModel addUser(UserAddModel userData) throws UserAlreadyExistsException {
         UserEntity user = userRepo.findByLogin(userData.getLogin());
         if(user != null) {
             throw new UserAlreadyExistsException("user with such login already exists");
@@ -66,7 +72,7 @@ public class UserService implements UserDetailsService {
         userData.setPassword(bCryptPasswordEncoder.encode(userData.getPassword()));
         user = createUser(userData);
         userRepo.save(user);
-        return user;
+        return UserGetModel.toModel(user);
     }
 
     private UserEntity createUser(UserAddModel userData) {
@@ -93,6 +99,9 @@ public class UserService implements UserDetailsService {
     }
 
     public List<UserGetModel> convertToUserGetModelList(List<UserEntity> users) {
+        if(users == null) {
+            return null;
+        }
         return users.stream().map(this::convertUserToGetModel).toList();
     }
 
@@ -106,16 +115,20 @@ public class UserService implements UserDetailsService {
         return UserGetModel.toModel(user);
     }
 
-    public UserEntity updateUser(UserUpdateModel newUserData) throws UserNotFoundException{
+    public UserGetModel updateUser(UserUpdateModel newUserData) throws UserNotFoundException{
         UserEntity user = getCurrentUser();
         updateUserData(newUserData, user);
         userRepo.save(user);
-        return user;
+        return UserGetModel.toModel(user);
     }
 
     public UserEntity getCurrentUser() throws UserNotFoundException {
-        Long userId = Long.valueOf((String) SecurityContextHolder
-                .getContext().getAuthentication().getPrincipal());
+        Authentication authentication = SecurityContextHolder
+                .getContext().getAuthentication();
+        if(authentication == null) {
+            return null;
+        }
+        Long userId = Long.valueOf((String) authentication.getPrincipal());
         return userRepo.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("current user wasn't found"));
     }
@@ -133,10 +146,10 @@ public class UserService implements UserDetailsService {
         return bCryptPasswordEncoder.encode(password);
     }
 
-    public UserEntity deleteUser() throws UserNotFoundException {
+    public UserGetModel deleteUser() throws UserNotFoundException {
         UserEntity user = getCurrentUser();
         userRepo.delete(user);
-        return user;
+        return UserGetModel.toModel(user);
     }
 
     public void checkUserRoleOrThrow(String userRole, UserEntity user)  {

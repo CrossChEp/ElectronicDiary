@@ -8,13 +8,12 @@ import java.util.List;
 
 @Entity
 @Table(name = "roles", schema = "working_schema")
+@Getter @Setter
 public class RoleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Getter @Setter
     private long id;
 
-    @Getter @Setter
     private String name;
 
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
