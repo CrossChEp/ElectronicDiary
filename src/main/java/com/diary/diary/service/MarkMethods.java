@@ -9,8 +9,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-
-@Service @Configurable
+@Service
 public class MarkMethods {
     public List<MarkEntity> filterMarksByDate(List<MarkEntity> marks, String date) throws ParseException {
         date = new SimpleDateFormat(DateConfig.DEFAULT_DATE_FORMAT_PATTERN).parse(date).toString();

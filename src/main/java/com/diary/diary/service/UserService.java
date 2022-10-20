@@ -16,10 +16,7 @@ import com.diary.diary.exception.user.UserNotFoundException;
 import com.diary.diary.model.user.UserAddModel;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Scope;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,16 +29,14 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.util.List;
-
-@Service @Configurable @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@Service
 public class UserService implements UserDetailsService {
 
-    @Autowired
+
     private UserRepository userRepo;
-    @Autowired
+
     private RoleRepository roleRepo;
 
-    @Autowired
     private MarkMethods markMethods;
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder
@@ -50,8 +45,17 @@ public class UserService implements UserDetailsService {
     public UserService() {
     }
 
+    @Autowired
+    public UserService(UserRepository userRepo, RoleRepository roleRepo, MarkMethods markMethods) {
+        this.userRepo = userRepo;
+        this.roleRepo = roleRepo;
+        this.markMethods = markMethods;
+    }
+
     public UserService(ApplicationContext applicationContext) {
-        this.userRepo = applicationContext.getBean(UserRepository.class);
+        userRepo = applicationContext.getBean(UserRepository.class);
+        roleRepo = applicationContext.getBean(RoleRepository.class);
+        markMethods = applicationContext.getBean(MarkMethods.class);
     }
 
     @Override
@@ -64,7 +68,7 @@ public class UserService implements UserDetailsService {
         return new User(Long.toString(user.getId()), user.getPassword(), List.of(userRole));
     }
 
-    public UserGetModel addUser(UserAddModel userData) throws UserAlreadyExistsException {
+    public UserGetModel addUser(UserAddModel userData)  {
         UserEntity user = userRepo.findByLogin(userData.getLogin());
         if(user != null) {
             throw new UserAlreadyExistsException("user with such login already exists");
@@ -105,7 +109,7 @@ public class UserService implements UserDetailsService {
         return users.stream().map(this::convertUserToGetModel).toList();
     }
 
-    public UserGetModel getUser(long userID) throws UserNotFoundException {
+    public UserGetModel getUser(long userID) {
         UserEntity user = userRepo.findById(userID)
                 .orElseThrow(() -> new UserNotFoundException("no user with such id"));
         return convertUserToGetModel(user);
@@ -115,14 +119,14 @@ public class UserService implements UserDetailsService {
         return UserGetModel.toModel(user);
     }
 
-    public UserGetModel updateUser(UserUpdateModel newUserData) throws UserNotFoundException{
+    public UserGetModel updateUser(UserUpdateModel newUserData) {
         UserEntity user = getCurrentUser();
         updateUserData(newUserData, user);
         userRepo.save(user);
         return UserGetModel.toModel(user);
     }
 
-    public UserEntity getCurrentUser() throws UserNotFoundException {
+    public UserEntity getCurrentUser() {
         Authentication authentication = SecurityContextHolder
                 .getContext().getAuthentication();
         if(authentication == null) {
@@ -146,7 +150,7 @@ public class UserService implements UserDetailsService {
         return bCryptPasswordEncoder.encode(password);
     }
 
-    public UserGetModel deleteUser() throws UserNotFoundException {
+    public UserGetModel deleteUser() {
         UserEntity user = getCurrentUser();
         userRepo.delete(user);
         return UserGetModel.toModel(user);
@@ -158,18 +162,17 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public UserEntity getUserEntity(long userId) throws UserNotFoundException {
+    public UserEntity getUserEntity(long userId) {
         return userRepo.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("user with id " + userId + " not found"));
     }
 
-    public List<MarkGetModel> getMarks() throws UserNotFoundException {
+    public List<MarkGetModel> getMarks() {
         UserEntity student = getCurrentUser();
         return convertToMarkGetModelList(student.getMarks());
     }
 
-    public List<MarkGetModel> getMarksByDate(String date)
-            throws UserNotFoundException, ParseException {
+    public List<MarkGetModel> getMarksByDate(String date) throws ParseException {
         UserEntity student = getCurrentUser();
         List<MarkEntity> marks = student.getMarks();
         return convertToMarkGetModelList(markMethods.filterMarksByDate(marks, date));

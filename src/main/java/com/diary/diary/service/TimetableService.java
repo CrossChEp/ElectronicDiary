@@ -1,21 +1,16 @@
 package com.diary.diary.service;
-import com.diary.diary.entity.ClassEntity;
 import com.diary.diary.entity.TimetableEntity;
-import com.diary.diary.exception.school_class.ClassNotFoundException;
 import com.diary.diary.exception.subject.SubjectNotFoundException;
 import com.diary.diary.exception.timetable.TimetableNotFoundException;
 import com.diary.diary.model.timetable.*;
-import com.diary.diary.repository.SubjectRepository;
 import com.diary.diary.repository.TimetableRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
-
 @Service
 public class TimetableService {
 

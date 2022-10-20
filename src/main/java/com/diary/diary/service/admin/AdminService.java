@@ -18,7 +18,6 @@ import com.diary.diary.repository.UserRepository;
 import com.diary.diary.service.ClassService;
 import com.diary.diary.service.SchoolService;
 import com.diary.diary.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 

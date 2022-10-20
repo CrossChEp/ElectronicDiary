@@ -2,20 +2,16 @@ package com.diary.diary.service;
 
 import com.diary.diary.config.RoleNames;
 import com.diary.diary.entity.SchoolEntity;
-import com.diary.diary.entity.UserEntity;
 import com.diary.diary.exception.school.SchoolAlreadyExistsException;
 import com.diary.diary.exception.school.SchoolNotFoundException;
 import com.diary.diary.exception.user.UserNotFoundException;
 import com.diary.diary.model.school.SchoolAddModel;
 import com.diary.diary.model.school.SchoolGetModel;
 import com.diary.diary.repository.SchoolRepository;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
 @Service
 public class SchoolService {
 

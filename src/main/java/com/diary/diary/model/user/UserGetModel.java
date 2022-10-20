@@ -5,23 +5,18 @@ import lombok.Getter;
 import lombok.Setter;
 import org.modelmapper.ModelMapper;
 
+@Getter @Setter
 public class UserGetModel {
-    @Getter @Setter
     private long id;
 
-    @Getter @Setter
     private String login;
 
-    @Getter @Setter
     private String name;
 
-    @Getter @Setter
     private String surname;
 
-    @Getter @Setter
     private String patronymic;
 
-    @Getter @Setter
     private String phoneNumber;
 
     public UserGetModel() {

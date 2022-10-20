@@ -8,13 +8,9 @@ import org.modelmapper.ModelMapper;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
+@Getter @Setter
 public class SubjectGetModel {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Getter @Setter
     private Long id;
-    @Getter @Setter
     private String name;
 
     public static SubjectGetModel toModel(SubjectEntity subject) {

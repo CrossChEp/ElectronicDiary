@@ -15,11 +15,11 @@ public class UnregisteredRole implements UserRole {
     }
 
     public UnregisteredRole(ApplicationContext applicationContext) {
-        this.userService = applicationContext.getBean(UserService.class);
+        this.userService = new UserService(applicationContext);
     }
 
     @Override
-    public UserGetModel register(UserAddModel userData) throws UserAlreadyExistsException {
+    public UserGetModel register(UserAddModel userData) {
         return userService.addUser(userData);
     }
 }

@@ -10,6 +10,7 @@ public class RoleService {
     @Autowired
     private RoleRepository roleRepository;
 
+
     public void addRole(String name) {
         RoleEntity role = new RoleEntity();
         role.setName(name);

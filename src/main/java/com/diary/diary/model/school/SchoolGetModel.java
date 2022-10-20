@@ -7,15 +7,12 @@ import lombok.Setter;
 import org.modelmapper.ModelMapper;
 
 import java.util.List;
-
+@Getter @Setter
 public class SchoolGetModel {
-    @Getter @Setter
     private long id;
 
-    @Getter @Setter
     private int number;
 
-    @Getter @Setter
     private List<UserGetModel> students;
     
     public static SchoolGetModel toModel(SchoolEntity school) {

@@ -11,12 +11,8 @@ import com.diary.diary.model.subject.SubjectDeleteModel;
 import com.diary.diary.model.subject.SubjectUpdateModel;
 import com.diary.diary.service.SubjectService;
 import com.diary.diary.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
-
-import javax.management.relation.Role;
-
 @Service
 public class AdminSubjectService {
 

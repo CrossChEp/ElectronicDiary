@@ -10,13 +10,11 @@ import com.diary.diary.model.subject.SubjectGetModel;
 import com.diary.diary.model.subject.SubjectUpdateModel;
 import com.diary.diary.repository.SubjectRepository;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-
 @Service
 public class SubjectService {
 
