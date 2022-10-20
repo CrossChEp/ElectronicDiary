@@ -23,7 +23,7 @@ public class DefaultRole extends UnregisteredRole {
     }
 
     public DefaultRole(ApplicationContext applicationContext) {
-        this.userService = applicationContext.getBean(UserService.class);
+        this.userService = new UserService(applicationContext);
     }
 
     @Override

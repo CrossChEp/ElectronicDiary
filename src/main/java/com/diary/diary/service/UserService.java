@@ -99,6 +99,9 @@ public class UserService implements UserDetailsService {
     }
 
     public List<UserGetModel> convertToUserGetModelList(List<UserEntity> users) {
+        if(users == null) {
+            return null;
+        }
         return users.stream().map(this::convertUserToGetModel).toList();
     }
 

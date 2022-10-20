@@ -52,7 +52,7 @@ public class ClassService {
         this.subjectService = new SubjectService(applicationContext);
         this.classRepo = applicationContext.getBean(ClassRepository.class);
         this.schoolRepo = applicationContext.getBean(SchoolRepository.class);
-        this.timetableService = new TimetableService();
+        this.timetableService = new TimetableService(applicationContext);
     }
 
     public ClassEntity getClassEntity(long classId) throws ClassNotFoundException {

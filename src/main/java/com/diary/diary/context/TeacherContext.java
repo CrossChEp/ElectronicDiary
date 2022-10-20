@@ -1,5 +1,7 @@
 package com.diary.diary.context;
 
+import com.diary.diary.entity.UserEntity;
+import com.diary.diary.exception.mark.MarkNotFoundException;
 import com.diary.diary.model.homework.HomeworkAddModel;
 import com.diary.diary.model.homework.HomeworkGetModel;
 import com.diary.diary.model.homework.HomeworkUpdateModel;
@@ -11,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service @Scope("prototype")
 public class TeacherContext {

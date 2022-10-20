@@ -17,47 +17,46 @@ import com.diary.diary.service.TimetableService;
 import com.diary.diary.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AdminTimetableService {
 
-    @Autowired
-    private UserService userService;
-    @Autowired
     private TimetableService timetableService;
-
-    @Autowired
     private ClassService classService;
+
+    public AdminTimetableService() {
+    }
+
+    public AdminTimetableService(ApplicationContext applicationContext) {
+        timetableService = new TimetableService(applicationContext);
+        classService = new ClassService(applicationContext);
+    }
 
     public TimetableEntity addTimetable(TimetableAddModel timetableData)
             throws UserNotFoundException, SubjectNotFoundException {
-        userService.checkUserRoleOrThrow(RoleNames.ADMIN, userService.getCurrentUser());
         return timetableService.addTimetable(timetableData);
     }
 
     public TimetableEntity updateTimetable(TimeTableUpdateModel newTimetableData)
         throws UserNotFoundException, TimetableNotFoundException, SubjectNotFoundException {
-        userService.checkUserRoleOrThrow(RoleNames.ADMIN, userService.getCurrentUser());
         return timetableService.updateTimetable(newTimetableData);
     }
 
     public TimetableEntity deleteTimetable(long id)
             throws UserNotFoundException, TimetableNotFoundException {
-        userService.checkUserRoleOrThrow(RoleNames.ADMIN, userService.getCurrentUser());
         return timetableService.deleteTimetable(id);
     }
 
     public ClassEntity addTimetableToClass(TimetableClassModel timetableClass)
             throws UserNotFoundException, TimetableNotFoundException,
             ClassNotFoundException, TimetableAlreadyExists {
-        userService.checkUserRoleOrThrow(RoleNames.ADMIN, userService.getCurrentUser());
         return classService.addTimetableToClass(timetableClass);
     }
 
     public ClassEntity deleteTimetableFromClass(long classId)
             throws UserNotFoundException, TimetableNotFoundException, ClassNotFoundException {
-        userService.checkUserRoleOrThrow(RoleNames.ADMIN, userService.getCurrentUser());
         return classService.deleteTimetableFromClass(classId);
     }
 }

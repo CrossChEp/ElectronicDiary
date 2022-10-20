@@ -19,26 +19,33 @@ import com.diary.diary.service.ClassService;
 import com.diary.diary.service.SchoolService;
 import com.diary.diary.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AdminService {
-    @Autowired
     private UserService userService;
 
-    @Autowired
     private UserRepository userRepo;
 
-    @Autowired
     private SchoolRepository schoolRepo;
 
-    @Autowired
     private SchoolService schoolService;
 
-    @Autowired
     private ClassService classService;
-    @Autowired
     private ClassRepository classRepo;
+
+    public AdminService() {
+    }
+
+    public AdminService(ApplicationContext applicationContext) {
+        this.userService = new UserService(applicationContext);
+        this.userRepo = applicationContext.getBean(UserRepository.class);
+        this.schoolRepo = applicationContext.getBean(SchoolRepository.class);
+        this.schoolService = new SchoolService(applicationContext);
+        this.classService = new ClassService(applicationContext);
+        this.classRepo = applicationContext.getBean(ClassRepository.class);
+    }
 
     public UserEntity addUserToSchool(AdminAddUserToSchoolModel addUserToSchoolData)
             throws UserNotFoundException, SchoolNotFoundException, UserAlreadyExistsException {

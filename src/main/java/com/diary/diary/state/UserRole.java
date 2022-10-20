@@ -6,6 +6,7 @@ import com.diary.diary.exception.subject.SubjectNotFoundException;
 import com.diary.diary.exception.user.UserAlreadyExistsException;
 import com.diary.diary.exception.user.UserNotFoundException;
 import com.diary.diary.model.admin.AdminAddUserToClassModel;
+import com.diary.diary.model.admin.AdminAddUserToSchoolModel;
 import com.diary.diary.model.admin.AdminRemoveUserFromClassModel;
 import com.diary.diary.model.admin.AdminRemoveUserFromSchoolModel;
 import com.diary.diary.model.homework.HomeworkAddModel;
@@ -165,6 +166,10 @@ public interface UserRole {
     }
 
     default SchoolEntity deleteSchool(long id) {
+        throw new NotImplementedException("user have no rights to use this functionality");
+    }
+
+    default UserEntity addUserToSchool(AdminAddUserToSchoolModel userAndSchool) {
         throw new NotImplementedException("user have no rights to use this functionality");
     }
 

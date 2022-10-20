@@ -18,9 +18,8 @@ import java.util.Map;
 
 @Service
 public class TimetableService {
-    @Autowired
+
     private TimetableRepository timetableRepo;
-    @Autowired
     private SubjectService subjectService;
 
     public TimetableService() {
